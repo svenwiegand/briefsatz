@@ -300,6 +300,28 @@
   border-radius: 1mm;
 }
 
+/* Code blocks – render as a quoted slab with no justification or hyphenation. */
+.letter-page__body-content pre {
+  font-family: ui-monospace, SFMono-Regular, "Liberation Mono", Menlo, monospace;
+  font-size: 9.5pt;
+  background-color: #f3f4f6;
+  padding: 2mm 3mm;
+  border-radius: 1.5mm;
+  margin: 0 0 3mm 0;
+  white-space: pre-wrap;
+  word-break: break-word;
+  text-align: left;
+  hyphens: manual;
+  -webkit-hyphens: manual;
+}
+
+.letter-page__body-content pre code {
+  background-color: transparent;
+  padding: 0;
+  border-radius: 0;
+  font-size: inherit;
+}
+
 .letter-page__body-content a {
   color: #1d4ed8;
   text-decoration: underline;

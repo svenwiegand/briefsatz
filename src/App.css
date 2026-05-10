@@ -104,6 +104,36 @@
   line-height: 1.4;
 }
 
+/* Inline <code> – the editor's default styling falls back to the OS serif
+ * monospace and drops the chip background; align with the preview. */
+.body-editor .bn-editor code {
+  font-family: ui-monospace, SFMono-Regular, "Liberation Mono", Menlo, monospace;
+  font-size: 0.92em;
+  background-color: rgba(127, 127, 127, 0.18);
+  padding: 1px 5px;
+  border-radius: 4px;
+}
+
+/* Code block (BlockNote `codeBlock` -> <pre><code>…</code></pre>) */
+.body-editor .bn-editor pre {
+  font-family: ui-monospace, SFMono-Regular, "Liberation Mono", Menlo, monospace;
+  font-size: 0.92em;
+  background-color: rgba(127, 127, 127, 0.12);
+  padding: 10px 12px;
+  border-radius: 6px;
+  margin: 0;
+  overflow-x: auto;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.body-editor .bn-editor pre code {
+  background: transparent;
+  padding: 0;
+  border-radius: 0;
+  font-size: inherit;
+}
+
 /* Preview panel */
 .preview-panel {
   background-color: #d8dde6;
