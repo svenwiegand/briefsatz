@@ -180,7 +180,7 @@ export default function App() {
             onClick={handlePrint}
             aria-label="Brief drucken oder als PDF speichern"
           >
-            Drucken / als PDF speichern
+            Drucken
           </Button>
         </Group>
       </AppShell.Header>
