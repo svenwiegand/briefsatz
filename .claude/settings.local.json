@@ -1,0 +1,12 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm --version)",
+      "Bash(shopt -s dotglob)",
+      "Bash(mv letter-app/* letter-app/.[!.]* .)",
+      "Bash(which npm; ls ~/.nvm/versions/node/v24.15.0/bin/npm)",
+      "mcp__Claude_Preview__preview_start",
+      "Bash(chmod +x /Users/sven.wiegand/source/private/letter/.claude/run-dev.sh)"
+    ]
+  }
+}

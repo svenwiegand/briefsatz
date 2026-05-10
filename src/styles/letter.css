@@ -1,0 +1,325 @@
+/*
+ * DIN 5008 Form B – Layout
+ *
+ * Page:                A4, 210mm x 297mm
+ * Left margin:         25mm
+ * Right margin:        20mm
+ * Address field top:   45mm (Form B)
+ * Address field size:  85mm x 45mm (top 5mm = return-address line)
+ * Information block:   right column, top 50mm
+ * Subject (Betreff):   ~98.46mm from top
+ * Body start:          ~104mm from top (2 lines below subject)
+ *
+ * Continuation pages:  top margin 25mm, no address window or info block
+ */
+
+.letter-page {
+  position: relative;
+  width: 210mm;
+  height: 297mm;
+  background-color: #ffffff;
+  color: #111111;
+  box-shadow: 0 6px 24px rgba(15, 23, 42, 0.18);
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: 11pt;
+  line-height: 1.4;
+  overflow: hidden;
+  page-break-after: always;
+  break-after: page;
+}
+
+.letter-page:last-of-type {
+  page-break-after: auto;
+  break-after: auto;
+}
+
+/* ==========================
+   Page 1 – special regions
+   ========================== */
+
+.letter-page__sender-block {
+  position: absolute;
+  top: 12mm;
+  right: 20mm;
+  max-width: 80mm;
+  text-align: right;
+  font-size: 10pt;
+  line-height: 1.35;
+  color: #111111;
+}
+
+.letter-page__sender-name {
+  font-weight: 600;
+  font-size: 11pt;
+}
+
+.letter-page__sender-line {
+  display: block;
+}
+
+.letter-page__sender-contact {
+  margin-top: 4mm;
+  font-size: 9.5pt;
+  color: #333333;
+}
+
+.letter-page__sender-contact span {
+  display: block;
+}
+
+/* Address window (Anschriftenfeld) – Form B */
+.letter-page__address-field {
+  position: absolute;
+  top: 45mm;
+  left: 25mm;
+  width: 85mm;
+  height: 45mm;
+  display: flex;
+  flex-direction: column;
+}
+
+.letter-page__return-line {
+  font-size: 8pt;
+  line-height: 1.2;
+  border-bottom: 0.2mm solid #888;
+  padding-bottom: 1mm;
+  margin-bottom: 1mm;
+  color: #333;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.letter-page__recipient {
+  font-size: 11pt;
+  line-height: 1.35;
+  display: flex;
+  flex-direction: column;
+}
+
+.letter-page__recipient-line {
+  display: block;
+}
+
+/* Information block (right side, below the address window) */
+.letter-page__info-block {
+  position: absolute;
+  top: 92mm;
+  right: 20mm;
+  max-width: 80mm;
+  font-size: 10pt;
+  line-height: 1.35;
+  display: grid;
+  grid-template-columns: auto auto;
+  justify-content: end;
+  column-gap: 4mm;
+  row-gap: 1.5mm;
+  text-align: right;
+}
+
+.letter-page__info-label {
+  color: #555555;
+}
+
+.letter-page__info-value {
+  color: #111111;
+  word-break: break-word;
+}
+
+/* Body region */
+.letter-page__body {
+  position: absolute;
+  left: 25mm;
+  right: 20mm;
+  bottom: 25mm;
+}
+
+.letter-page--first .letter-page__body {
+  top: 98.46mm;
+}
+
+.letter-page--continuation .letter-page__body {
+  top: 25mm;
+}
+
+.letter-page__continuation-header {
+  position: absolute;
+  top: 12mm;
+  left: 25mm;
+  right: 20mm;
+  font-size: 9pt;
+  color: #555555;
+  display: flex;
+  justify-content: space-between;
+  border-bottom: 0.2mm solid #cccccc;
+  padding-bottom: 2mm;
+}
+
+.letter-page__subject {
+  font-weight: 600;
+  font-size: 11pt;
+  margin-bottom: 6mm;
+}
+
+.letter-page__greeting {
+  margin-bottom: 4mm;
+}
+
+.letter-page__body-content {
+  /* Body text from BlockNote */
+}
+
+.letter-page__body-content > * {
+  margin: 0 0 3mm 0;
+}
+
+.letter-page__body-content p {
+  margin: 0 0 3mm 0;
+}
+
+.letter-page__body-content h1,
+.letter-page__body-content h2,
+.letter-page__body-content h3 {
+  font-weight: 600;
+  margin: 4mm 0 2mm;
+}
+
+.letter-page__body-content h1 { font-size: 14pt; }
+.letter-page__body-content h2 { font-size: 12.5pt; }
+.letter-page__body-content h3 { font-size: 11.5pt; }
+
+.letter-page__body-content ul,
+.letter-page__body-content ol {
+  margin: 0 0 3mm 0;
+  padding-left: 6mm;
+}
+
+.letter-page__body-content li {
+  margin-bottom: 1mm;
+}
+
+.letter-page__body-content blockquote {
+  margin: 0 0 3mm 0;
+  padding-left: 4mm;
+  border-left: 0.5mm solid #999999;
+  color: #333333;
+}
+
+.letter-page__body-content code {
+  font-family: ui-monospace, SFMono-Regular, "Liberation Mono", Menlo, monospace;
+  font-size: 0.95em;
+  background-color: #f3f4f6;
+  padding: 0.5mm 1mm;
+  border-radius: 1mm;
+}
+
+.letter-page__body-content a {
+  color: #1d4ed8;
+  text-decoration: underline;
+}
+
+.letter-page__closing {
+  margin-top: 5mm;
+}
+
+.letter-page__signature-space {
+  height: 18mm;
+}
+
+.letter-page__signature-name {
+  margin-top: 0;
+}
+
+/* Footer with page number */
+.letter-page__footer {
+  position: absolute;
+  bottom: 8mm;
+  left: 25mm;
+  right: 20mm;
+  font-size: 9pt;
+  color: #6b6b6b;
+  text-align: right;
+}
+
+/* Folding marks (Faltmarken) and punch mark – screen only */
+.letter-page__marks {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 5mm;
+  height: 100%;
+  pointer-events: none;
+}
+
+.letter-page__marks::before,
+.letter-page__marks::after,
+.letter-page__marks > span {
+  content: "";
+  position: absolute;
+  left: 0;
+  width: 4mm;
+  height: 0;
+  border-top: 0.2mm solid #b3b3b3;
+}
+
+.letter-page__marks::before { top: 105mm; }
+.letter-page__marks::after { top: 210mm; }
+.letter-page__marks > span { top: 148.5mm; width: 5mm; }
+
+/* ==========================
+   Print
+   ========================== */
+
+@page {
+  size: A4 portrait;
+  margin: 0;
+}
+
+@media print {
+  :root {
+    background-color: #ffffff !important;
+  }
+
+  body {
+    background-color: #ffffff !important;
+  }
+
+  .app__header,
+  .editor-panel,
+  .preview-measure {
+    display: none !important;
+  }
+
+  .app,
+  .app__main,
+  .preview-panel,
+  .preview-pages {
+    display: block !important;
+    background: #ffffff !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    overflow: visible !important;
+    height: auto !important;
+    min-height: 0 !important;
+  }
+
+  .preview-panel {
+    background-image: none !important;
+  }
+
+  .letter-page {
+    box-shadow: none !important;
+    margin: 0 !important;
+    page-break-after: always;
+    break-after: page;
+  }
+
+  .letter-page:last-of-type {
+    page-break-after: auto;
+    break-after: auto;
+  }
+
+  .letter-page__marks {
+    display: none;
+  }
+}
