@@ -40,6 +40,12 @@
    Page 1 – special regions
    ========================== */
 
+/* The user agent renders <address> in italics by default; reset for any
+ * address that appears inside a letter page. */
+.letter-page address {
+  font-style: normal;
+}
+
 .letter-page__sender-block {
   position: absolute;
   top: 12mm;
