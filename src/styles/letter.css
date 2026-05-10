@@ -101,10 +101,12 @@
   display: block;
 }
 
-/* Information block (right side, below the address window) */
+/* Information block (right side, below the address window).
+ * Anchored at the bottom so it grows upward when more rows are added,
+ * keeping the date right above the body region. */
 .letter-page__info-block {
   position: absolute;
-  top: 92mm;
+  bottom: 201mm; /* page height 297mm - 96mm = 201mm; bottom edge sits 96mm from page top */
   right: 20mm;
   max-width: 80mm;
   font-size: 10pt;
