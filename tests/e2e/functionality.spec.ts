@@ -211,6 +211,64 @@ test.describe('Functionality', () => {
     expect(printed).toBe(true)
   })
 
+  test('all letter data is persisted to localStorage and rehydrates on reload', async ({
+    page,
+  }) => {
+    await gotoApp(page)
+
+    await page.getByLabel(field('Name')).first().fill('Petra Persistent')
+    await page.getByLabel(field('Betreff')).fill('Persistente Anfrage')
+    await page.getByLabel(field('Datum')).fill('15.06.2026')
+    await page.keyboard.press('Escape')
+    await setBodyBlocks(page, [
+      { type: 'paragraph', content: 'Persistierter Brieftext.' },
+    ])
+
+    // Wait one frame so localStorage write completes.
+    await page.evaluate(
+      () =>
+        new Promise<void>((r) =>
+          requestAnimationFrame(() => requestAnimationFrame(() => r())),
+        ),
+    )
+
+    const stored = await page.evaluate(() =>
+      window.localStorage.getItem('letter-app:data'),
+    )
+    expect(stored).not.toBeNull()
+    const parsed = JSON.parse(stored!)
+    expect(parsed.sender.name).toBe('Petra Persistent')
+    expect(parsed.meta.subject).toBe('Persistente Anfrage')
+    // Date is serialised as a full ISO string – its calendar date depends on
+    // the runner's timezone, so we just assert it parses to a valid Date.
+    expect(typeof parsed.meta.date).toBe('string')
+    expect(Number.isNaN(new Date(parsed.meta.date).getTime())).toBe(false)
+    expect(Array.isArray(parsed.bodyBlocks)).toBe(true)
+    expect(parsed.bodyBlocks.length).toBeGreaterThan(0)
+
+    await page.reload()
+    await page.waitForFunction(() => document.fonts.status === 'loaded')
+
+    const firstPage = page.locator('.letter-page').first()
+    await expect(firstPage.locator('.letter-page__sender-block')).toContainText(
+      'Petra Persistent',
+    )
+    await expect(firstPage.locator('.letter-page__subject')).toHaveText(
+      'Persistente Anfrage',
+    )
+    await expect(firstPage.locator('.letter-page__info-block')).toContainText(
+      '15.06.2026',
+    )
+    await expect(firstPage.locator('.letter-page__body-content')).toContainText(
+      'Persistierter Brieftext.',
+    )
+
+    // The editor itself rehydrates with the stored blocks.
+    await expect(page.locator('.bn-editor')).toContainText(
+      'Persistierter Brieftext.',
+    )
+  })
+
   test('replacing body blocks via the editor flows through to the preview', async ({
     page,
   }) => {

@@ -1,4 +1,4 @@
-import { useCallback, useRef, useState } from 'react'
+import { useCallback, useRef } from 'react'
 import { AppShell, Button, Group, Stack, Text, Title } from '@mantine/core'
 import { useLocalStorage } from '@mantine/hooks'
 import { EditorPanel } from './components/EditorPanel'
@@ -11,6 +11,8 @@ import './styles/letter.css'
 const EDITOR_PERCENT_MIN = 25
 const EDITOR_PERCENT_MAX = 70
 const EDITOR_PERCENT_DEFAULT = 42
+
+const DATA_STORAGE_KEY = 'letter-app:data'
 
 const initialData: LetterData = {
   sender: {
@@ -45,6 +47,61 @@ const initialData: LetterData = {
     signature: 'Max Mustermann',
   },
   bodyHtml: '',
+  bodyBlocks: [],
+}
+
+function toIsoOrNull(value: Date | null): string | null {
+  return value instanceof Date && !Number.isNaN(value.getTime())
+    ? value.toISOString()
+    : null
+}
+
+function parseDate(value: unknown): Date | null {
+  if (typeof value !== 'string') return null
+  const parsed = new Date(value)
+  return Number.isNaN(parsed.getTime()) ? null : parsed
+}
+
+function serializeData(data: LetterData): string {
+  return JSON.stringify({
+    ...data,
+    meta: {
+      ...data.meta,
+      date: toIsoOrNull(data.meta.date),
+      yourMessage: toIsoOrNull(data.meta.yourMessage),
+    },
+  })
+}
+
+function deserializeData(value: string | undefined): LetterData {
+  if (!value) return initialData
+  try {
+    const parsed = JSON.parse(value) as Partial<LetterData> & {
+      meta?: Partial<LetterData['meta']>
+    }
+    if (!parsed || typeof parsed !== 'object') return initialData
+    return {
+      ...initialData,
+      ...parsed,
+      sender: { ...initialData.sender, ...(parsed.sender ?? {}) },
+      senderContact: {
+        ...initialData.senderContact,
+        ...(parsed.senderContact ?? {}),
+      },
+      recipient: { ...initialData.recipient, ...(parsed.recipient ?? {}) },
+      meta: {
+        ...initialData.meta,
+        ...(parsed.meta ?? {}),
+        date: parseDate(parsed.meta?.date),
+        yourMessage: parseDate(parsed.meta?.yourMessage),
+      },
+      bodyHtml:
+        typeof parsed.bodyHtml === 'string' ? parsed.bodyHtml : '',
+      bodyBlocks: Array.isArray(parsed.bodyBlocks) ? parsed.bodyBlocks : [],
+    }
+  } catch {
+    return initialData
+  }
 }
 
 function clamp(value: number, min: number, max: number) {
@@ -52,7 +109,13 @@ function clamp(value: number, min: number, max: number) {
 }
 
 export default function App() {
-  const [data, setData] = useState<LetterData>(initialData)
+  const [data, setData] = useLocalStorage<LetterData>({
+    key: DATA_STORAGE_KEY,
+    defaultValue: initialData,
+    serialize: serializeData,
+    deserialize: deserializeData,
+    getInitialValueInEffect: false,
+  })
   const [editorPercent, setEditorPercent] = useLocalStorage<number>({
     key: 'letter-app:editor-percent',
     defaultValue: EDITOR_PERCENT_DEFAULT,

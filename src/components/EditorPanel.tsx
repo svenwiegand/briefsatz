@@ -4,7 +4,7 @@ import { DateInput } from '@mantine/dates'
 import dayjs from 'dayjs'
 import customParseFormat from 'dayjs/plugin/customParseFormat'
 import { AddressFields } from './AddressFields'
-import { BodyEditor } from './BodyEditor'
+import { BodyEditor, type BodyEditorChange } from './BodyEditor'
 import type { Address, LetterData, LetterMeta, SenderContact } from '../types'
 
 dayjs.extend(customParseFormat)
@@ -29,9 +29,9 @@ export function EditorPanel({ data, onChange }: Props) {
   const updateSenderContact = (senderContact: SenderContact) =>
     onChange({ ...data, senderContact })
 
-  const updateBodyHtml = useCallback(
-    (bodyHtml: string) => {
-      onChange({ ...data, bodyHtml })
+  const updateBody = useCallback(
+    ({ blocks, html }: BodyEditorChange) => {
+      onChange({ ...data, bodyBlocks: blocks, bodyHtml: html })
     },
     [data, onChange],
   )
@@ -138,7 +138,10 @@ export function EditorPanel({ data, onChange }: Props) {
             formatieren. Längere Briefe werden automatisch auf mehrere Seiten
             verteilt.
           </Text>
-          <BodyEditor onChange={updateBodyHtml} />
+          <BodyEditor
+            initialBlocks={data.bodyBlocks}
+            onChange={updateBody}
+          />
         </Stack>
       </Fieldset>
 
