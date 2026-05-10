@@ -1,17 +1,10 @@
 import { useCallback, useState } from 'react'
+import { AppShell, Button, Group, Stack, Text, Title } from '@mantine/core'
 import { EditorPanel } from './components/EditorPanel'
 import { PreviewPanel } from './components/PreviewPanel'
 import type { LetterData } from './types'
 import './App.css'
 import './styles/letter.css'
-
-function todayDate(): string {
-  return new Intl.DateTimeFormat('de-DE', {
-    day: '2-digit',
-    month: '2-digit',
-    year: 'numeric',
-  }).format(new Date())
-}
 
 const initialData: LetterData = {
   sender: {
@@ -36,9 +29,9 @@ const initialData: LetterData = {
     country: '',
   },
   meta: {
-    date: todayDate(),
+    date: new Date(),
     yourReference: '',
-    yourMessage: '',
+    yourMessage: null,
     ourReference: '',
     subject: 'Ihr Anliegen',
     greeting: 'Sehr geehrte Damen und Herren,',
@@ -56,25 +49,29 @@ export default function App() {
   }, [])
 
   return (
-    <div className="app">
-      <header className="app__header">
-        <h1 className="app__title">
-          Brief nach DIN 5008
-          <small>Form B – Absender rechts</small>
-        </h1>
-        <button
-          type="button"
-          className="btn btn--primary"
-          onClick={handlePrint}
-          aria-label="Brief drucken oder als PDF speichern"
-        >
-          Drucken / als PDF speichern
-        </button>
-      </header>
-      <main className="app__main">
+    <AppShell header={{ height: 64 }} padding={0} className="app">
+      <AppShell.Header>
+        <Group h="100%" px="lg" justify="space-between" wrap="nowrap">
+          <Stack gap={0}>
+            <Title order={1} size="h4">
+              Brief nach DIN 5008
+            </Title>
+            <Text size="xs" c="dimmed">
+              Form B – Absender rechts
+            </Text>
+          </Stack>
+          <Button
+            onClick={handlePrint}
+            aria-label="Brief drucken oder als PDF speichern"
+          >
+            Drucken / als PDF speichern
+          </Button>
+        </Group>
+      </AppShell.Header>
+      <AppShell.Main className="app__main">
         <EditorPanel data={data} onChange={setData} />
         <PreviewPanel data={data} />
-      </main>
-    </div>
+      </AppShell.Main>
+    </AppShell>
   )
 }

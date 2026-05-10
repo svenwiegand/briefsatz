@@ -1,4 +1,6 @@
 import { useCallback } from 'react'
+import { Fieldset, SimpleGrid, Stack, Text, TextInput } from '@mantine/core'
+import { DateInput } from '@mantine/dates'
 import { AddressFields } from './AddressFields'
 import { BodyEditor } from './BodyEditor'
 import type { Address, LetterData, LetterMeta, SenderContact } from '../types'
@@ -10,10 +12,10 @@ interface Props {
 
 export function EditorPanel({ data, onChange }: Props) {
   const updateSender = (sender: Address) => onChange({ ...data, sender })
-  const updateSenderContact = (senderContact: SenderContact) =>
-    onChange({ ...data, senderContact })
   const updateRecipient = (recipient: Address) => onChange({ ...data, recipient })
   const updateMeta = (meta: LetterMeta) => onChange({ ...data, meta })
+  const updateSenderContact = (senderContact: SenderContact) =>
+    onChange({ ...data, senderContact })
 
   const updateBodyHtml = useCallback(
     (bodyHtml: string) => {
@@ -31,143 +33,123 @@ export function EditorPanel({ data, onChange }: Props) {
   ) => updateSenderContact({ ...data.senderContact, [key]: value })
 
   return (
-    <section className="editor-panel" aria-label="Briefdaten">
-      <fieldset className="form-group">
-        <legend>Absender</legend>
-        <AddressFields value={data.sender} onChange={updateSender} />
-        <div className="form-grid" style={{ marginTop: 'var(--space-3)' }}>
-          <label className="form-field" htmlFor="sender-email">
-            E-Mail
-            <input
-              id="sender-email"
+    <Stack
+      gap="md"
+      p="lg"
+      className="editor-panel"
+      role="region"
+      aria-label="Briefdaten"
+    >
+      <Fieldset legend="Absender">
+        <Stack gap="sm">
+          <AddressFields value={data.sender} onChange={updateSender} />
+          <SimpleGrid cols={{ base: 1, sm: 2 }} spacing="sm">
+            <TextInput
+              label="E-Mail"
               type="email"
               autoComplete="email"
               value={data.senderContact.email}
-              onChange={(e) => setContactField('email', e.target.value)}
+              onChange={(e) => setContactField('email', e.currentTarget.value)}
             />
-          </label>
-          <label className="form-field" htmlFor="sender-phone">
-            Telefon
-            <input
-              id="sender-phone"
+            <TextInput
+              label="Telefon"
               type="tel"
               autoComplete="tel"
               value={data.senderContact.phone}
-              onChange={(e) => setContactField('phone', e.target.value)}
+              onChange={(e) => setContactField('phone', e.currentTarget.value)}
             />
-          </label>
-          <label className="form-field form-field--full" htmlFor="sender-website">
-            Website (optional)
-            <input
-              id="sender-website"
-              type="url"
-              autoComplete="url"
-              value={data.senderContact.website}
-              onChange={(e) => setContactField('website', e.target.value)}
-            />
-          </label>
-        </div>
-      </fieldset>
+          </SimpleGrid>
+          <TextInput
+            label="Website"
+            description="optional"
+            type="url"
+            autoComplete="url"
+            value={data.senderContact.website}
+            onChange={(e) => setContactField('website', e.currentTarget.value)}
+          />
+        </Stack>
+      </Fieldset>
 
-      <fieldset className="form-group">
-        <legend>Empfänger</legend>
+      <Fieldset legend="Empfänger">
         <AddressFields value={data.recipient} onChange={updateRecipient} />
-      </fieldset>
+      </Fieldset>
 
-      <fieldset className="form-group">
-        <legend>Briefkopf</legend>
-        <div className="form-grid">
-          <label className="form-field" htmlFor="meta-date">
-            Datum
-            <input
-              id="meta-date"
-              type="text"
+      <Fieldset legend="Briefkopf">
+        <Stack gap="sm">
+          <SimpleGrid cols={{ base: 1, sm: 2 }} spacing="sm">
+            <DateInput
+              label="Datum"
+              valueFormat="DD.MM.YYYY"
               value={data.meta.date}
-              onChange={(e) => setMetaField('date', e.target.value)}
+              onChange={(value) => setMetaField('date', toDate(value))}
+              clearable
             />
-          </label>
-          <label className="form-field" htmlFor="meta-our-reference">
-            Unser Zeichen (optional)
-            <input
-              id="meta-our-reference"
-              type="text"
+            <TextInput
+              label="Unser Zeichen"
+              description="optional"
               value={data.meta.ourReference}
-              onChange={(e) => setMetaField('ourReference', e.target.value)}
+              onChange={(e) => setMetaField('ourReference', e.currentTarget.value)}
             />
-          </label>
-          <label className="form-field" htmlFor="meta-your-reference">
-            Ihr Zeichen (optional)
-            <input
-              id="meta-your-reference"
-              type="text"
+            <TextInput
+              label="Ihr Zeichen"
+              description="optional"
               value={data.meta.yourReference}
-              onChange={(e) => setMetaField('yourReference', e.target.value)}
+              onChange={(e) => setMetaField('yourReference', e.currentTarget.value)}
             />
-          </label>
-          <label className="form-field" htmlFor="meta-your-message">
-            Ihre Nachricht vom (optional)
-            <input
-              id="meta-your-message"
-              type="text"
+            <DateInput
+              label="Ihre Nachricht vom"
+              description="optional"
+              valueFormat="DD.MM.YYYY"
               value={data.meta.yourMessage}
-              onChange={(e) => setMetaField('yourMessage', e.target.value)}
+              onChange={(value) => setMetaField('yourMessage', toDate(value))}
+              clearable
             />
-          </label>
-          <label className="form-field form-field--full" htmlFor="meta-subject">
-            Betreff
-            <input
-              id="meta-subject"
-              type="text"
-              value={data.meta.subject}
-              onChange={(e) => setMetaField('subject', e.target.value)}
-            />
-          </label>
-          <label className="form-field form-field--full" htmlFor="meta-greeting">
-            Anrede
-            <input
-              id="meta-greeting"
-              type="text"
-              value={data.meta.greeting}
-              onChange={(e) => setMetaField('greeting', e.target.value)}
-            />
-          </label>
-        </div>
-      </fieldset>
+          </SimpleGrid>
+          <TextInput
+            label="Betreff"
+            value={data.meta.subject}
+            onChange={(e) => setMetaField('subject', e.currentTarget.value)}
+          />
+          <TextInput
+            label="Anrede"
+            value={data.meta.greeting}
+            onChange={(e) => setMetaField('greeting', e.currentTarget.value)}
+          />
+        </Stack>
+      </Fieldset>
 
-      <fieldset className="form-group form-group--editor">
-        <legend>Brieftext</legend>
-        <p className="form-help">
-          Sie können Text fett, kursiv, als Listen oder Überschriften formatieren.
-          Längere Briefe werden automatisch auf mehrere Seiten verteilt.
-        </p>
-        <div style={{ marginTop: 'var(--space-3)' }}>
+      <Fieldset legend="Brieftext">
+        <Stack gap="sm">
+          <Text size="sm" c="dimmed">
+            Sie können Text fett, kursiv, als Listen oder Überschriften
+            formatieren. Längere Briefe werden automatisch auf mehrere Seiten
+            verteilt.
+          </Text>
           <BodyEditor onChange={updateBodyHtml} />
-        </div>
-      </fieldset>
+        </Stack>
+      </Fieldset>
 
-      <fieldset className="form-group">
-        <legend>Schluss</legend>
-        <div className="form-grid form-grid--single">
-          <label className="form-field" htmlFor="meta-closing">
-            Grußformel
-            <input
-              id="meta-closing"
-              type="text"
-              value={data.meta.closing}
-              onChange={(e) => setMetaField('closing', e.target.value)}
-            />
-          </label>
-          <label className="form-field" htmlFor="meta-signature">
-            Unterschrift (Name)
-            <input
-              id="meta-signature"
-              type="text"
-              value={data.meta.signature}
-              onChange={(e) => setMetaField('signature', e.target.value)}
-            />
-          </label>
-        </div>
-      </fieldset>
-    </section>
+      <Fieldset legend="Schluss">
+        <Stack gap="sm">
+          <TextInput
+            label="Grußformel"
+            value={data.meta.closing}
+            onChange={(e) => setMetaField('closing', e.currentTarget.value)}
+          />
+          <TextInput
+            label="Unterschrift (Name)"
+            value={data.meta.signature}
+            onChange={(e) => setMetaField('signature', e.currentTarget.value)}
+          />
+        </Stack>
+      </Fieldset>
+    </Stack>
   )
+}
+
+function toDate(value: string | Date | null): Date | null {
+  if (!value) return null
+  if (value instanceof Date) return value
+  const parsed = new Date(value)
+  return Number.isNaN(parsed.getTime()) ? null : parsed
 }

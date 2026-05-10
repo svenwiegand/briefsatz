@@ -14,9 +14,9 @@ export interface SenderContact {
 }
 
 export interface LetterMeta {
-  date: string;
+  date: Date | null;
   yourReference: string;
-  yourMessage: string;
+  yourMessage: Date | null;
   ourReference: string;
   subject: string;
   greeting: string;

@@ -142,9 +142,10 @@ function AddressField({ data }: { data: LetterData }) {
 function InfoBlock({ data }: { data: LetterData }) {
   const items: Array<[string, string]> = []
   if (data.meta.yourReference) items.push(['Ihr Zeichen', data.meta.yourReference])
-  if (data.meta.yourMessage) items.push(['Ihre Nachricht vom', data.meta.yourMessage])
+  if (data.meta.yourMessage)
+    items.push(['Ihre Nachricht vom', formatDate(data.meta.yourMessage)])
   if (data.meta.ourReference) items.push(['Unser Zeichen', data.meta.ourReference])
-  if (data.meta.date) items.push(['Datum', data.meta.date])
+  if (data.meta.date) items.push(['Datum', formatDate(data.meta.date)])
 
   if (items.length === 0) return null
 
@@ -172,12 +173,23 @@ function ContinuationHeader({
   const recipientLine = [data.recipient.organization, data.recipient.name]
     .filter(Boolean)
     .join(', ')
+  const formattedDate = formatDate(data.meta.date)
   return (
     <div className="letter-page__continuation-header">
       <span>{recipientLine}</span>
       <span>
-        {data.meta.date} · Seite {pageIndex + 1} / {totalPages}
+        {formattedDate && <>{formattedDate} · </>}Seite {pageIndex + 1} / {totalPages}
       </span>
     </div>
   )
+}
+
+const dateFormatter = new Intl.DateTimeFormat('de-DE', {
+  day: '2-digit',
+  month: '2-digit',
+  year: 'numeric',
+})
+
+function formatDate(value: Date | null): string {
+  return value ? dateFormatter.format(value) : ''
 }
