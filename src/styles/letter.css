@@ -327,8 +327,4 @@
     page-break-after: auto;
     break-after: auto;
   }
-
-  .letter-page__marks {
-    display: none;
-  }
 }
