@@ -128,12 +128,14 @@
   word-break: break-word;
 }
 
-/* Body region */
+/* Body region. `overflow: hidden` prevents any pagination drift from
+ * spilling into the page footer at bottom: 8mm. */
 .letter-page__body {
   position: absolute;
   left: 25mm;
   right: 20mm;
   bottom: 25mm;
+  overflow: hidden;
 }
 
 .letter-page--first .letter-page__body {

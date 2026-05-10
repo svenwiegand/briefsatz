@@ -6,14 +6,16 @@ const MM_TO_PX = 96 / 25.4
 
 const BODY_WIDTH_MM = 165 // 210 - 25 (left) - 20 (right)
 
-// Available height inside the body region per page (in mm).
-// Page body region (first page) starts at 98.46mm, ends at 297-25=272mm
-//   -> 173.54mm. Subject (~6mm) + greeting (~6mm) + spacing eat ~16mm.
-// Continuation pages: top 25mm, bottom 25mm -> 247mm.
-// Reserve 30mm on the last page for closing + signature space + name.
-const FIRST_PAGE_BODY_HEIGHT_MM = 173.54 - 16
-const CONT_PAGE_BODY_HEIGHT_MM = 247
+// Body region geometry (matches letter.css):
+//   First page: top 98.46mm, bottom 25mm  -> 173.54mm tall
+//   Continuation: top 25mm, bottom 25mm   -> 247mm tall
+// On the first page, subject + greeting are rendered above body content;
+// their actual height is measured at runtime so a long subject does not
+// cause body content to overflow.
+const FIRST_PAGE_TOTAL_MM = 297 - 98.46 - 25
+const CONT_PAGE_BODY_HEIGHT_MM = 297 - 25 - 25
 const SIGNATURE_BLOCK_MM = 30
+const PREAMBLE_TO_BODY_GAP_MM = 0.5
 
 type PageContent = {
   bodyHtml: string
@@ -22,17 +24,24 @@ type PageContent = {
 
 export function PreviewPanel({ data }: { data: LetterData }) {
   const measureRef = useRef<HTMLDivElement>(null)
+  const preambleRef = useRef<HTMLDivElement>(null)
   const [pages, setPages] = useState<PageContent[]>([
     { bodyHtml: '', showClosing: true },
   ])
 
   useEffect(() => {
     const node = measureRef.current
-    if (!node) return
+    const preamble = preambleRef.current
+    if (!node || !preamble) return
 
     const recompute = () => {
       const elements = Array.from(node.children) as HTMLElement[]
-      const firstLimit = FIRST_PAGE_BODY_HEIGHT_MM * MM_TO_PX
+      const preambleHeightMm = preamble.offsetHeight / MM_TO_PX
+      const firstAvailMm = Math.max(
+        20,
+        FIRST_PAGE_TOTAL_MM - preambleHeightMm - PREAMBLE_TO_BODY_GAP_MM,
+      )
+      const firstLimit = firstAvailMm * MM_TO_PX
       const contLimit = CONT_PAGE_BODY_HEIGHT_MM * MM_TO_PX
       const reservePx = SIGNATURE_BLOCK_MM * MM_TO_PX
 
@@ -57,7 +66,6 @@ export function PreviewPanel({ data }: { data: LetterData }) {
         groups[pageIdx].push(el)
       }
 
-      // Determine if closing fits on the last group page or needs its own page.
       const lastGroup = groups[groups.length - 1]
       const lastUsedPx =
         lastGroup.length === 0
@@ -66,7 +74,6 @@ export function PreviewPanel({ data }: { data: LetterData }) {
             lastGroup[lastGroup.length - 1].offsetHeight -
             (lastGroup[0]?.offsetTop ?? 0)
       const lastLimit = groups.length === 1 ? firstLimit : contLimit
-
       const closingFits = lastUsedPx + reservePx <= lastLimit
 
       const result: PageContent[] = groups.map((group, idx) => ({
@@ -81,10 +88,16 @@ export function PreviewPanel({ data }: { data: LetterData }) {
       setPages(result)
     }
 
-    // Wait one frame for layout to settle.
     const raf = requestAnimationFrame(recompute)
     return () => cancelAnimationFrame(raf)
-  }, [data.bodyHtml])
+  }, [data.bodyHtml, data.meta.subject, data.meta.greeting])
+
+  const previewMeasureStyle = {
+    width: `${BODY_WIDTH_MM}mm`,
+    fontFamily: '"Helvetica Neue", Helvetica, Arial, sans-serif',
+    fontSize: '11pt',
+    lineHeight: 1.4,
+  } as const
 
   return (
     <section className="preview-panel" aria-label="Briefvorschau">
@@ -104,14 +117,22 @@ export function PreviewPanel({ data }: { data: LetterData }) {
         ref={measureRef}
         className="preview-measure letter-page__body-content"
         aria-hidden="true"
-        style={{
-          width: `${BODY_WIDTH_MM}mm`,
-          fontFamily: '"Helvetica Neue", Helvetica, Arial, sans-serif',
-          fontSize: '11pt',
-          lineHeight: 1.4,
-        }}
+        style={previewMeasureStyle}
         dangerouslySetInnerHTML={{ __html: data.bodyHtml || '<p></p>' }}
       />
+      <div
+        ref={preambleRef}
+        className="preview-measure"
+        aria-hidden="true"
+        style={{ ...previewMeasureStyle, paddingBottom: '0.1mm' }}
+      >
+        {data.meta.subject.trim() && (
+          <p className="letter-page__subject">{data.meta.subject}</p>
+        )}
+        {data.meta.greeting.trim() && (
+          <p className="letter-page__greeting">{data.meta.greeting}</p>
+        )}
+      </div>
     </section>
   )
 }
