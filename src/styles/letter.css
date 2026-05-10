@@ -207,6 +207,61 @@
   margin-bottom: 1mm;
 }
 
+/* Check-list items rendered from BlockNote (blocksToHTMLLossy emits
+ * <li><input type="checkbox"><p>...</p></li>; suppress the inherited
+ * disc marker and render a clean inline checkbox). */
+.letter-page__body-content li:has(> input[type="checkbox"]) {
+  list-style: none;
+  display: flex;
+  align-items: baseline;
+  gap: 2mm;
+  margin-left: -5mm;
+}
+
+.letter-page__body-content li > input[type="checkbox"] {
+  appearance: none;
+  -webkit-appearance: none;
+  flex: 0 0 auto;
+  width: 3mm;
+  height: 3mm;
+  border: 0.3mm solid #444;
+  border-radius: 0.6mm;
+  background-color: #ffffff;
+  position: relative;
+  pointer-events: none;
+  transform: translateY(0.3mm);
+}
+
+.letter-page__body-content li > input[type="checkbox"]:checked {
+  background-color: #1d4ed8;
+  border-color: #1d4ed8;
+}
+
+.letter-page__body-content li > input[type="checkbox"]:checked::after {
+  content: "";
+  position: absolute;
+  left: 0.55mm;
+  top: 0.15mm;
+  width: 1.6mm;
+  height: 0.9mm;
+  border-left: 0.4mm solid #ffffff;
+  border-bottom: 0.4mm solid #ffffff;
+  transform: rotate(-45deg);
+}
+
+.letter-page__body-content li[data-checked="true"] {
+  color: #6b7280;
+}
+
+.letter-page__body-content li[data-checked="true"] > p {
+  text-decoration: line-through;
+}
+
+.letter-page__body-content li > p.bn-inline-content {
+  margin: 0;
+  flex: 1;
+}
+
 .letter-page__body-content blockquote {
   margin: 0 0 3mm 0;
   padding-left: 4mm;
