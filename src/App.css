@@ -4,6 +4,13 @@
   min-height: 100%;
 }
 
+@media (min-width: 1025px) {
+  .app {
+    height: 100%;
+    overflow: hidden;
+  }
+}
+
 .app__header {
   display: flex;
   align-items: center;
@@ -36,6 +43,12 @@
   grid-template-columns: minmax(380px, 1fr) minmax(0, 1.4fr);
   flex: 1;
   min-height: 0;
+}
+
+@media (min-width: 1025px) {
+  .app__main {
+    overflow: hidden;
+  }
 }
 
 @media (max-width: 1024px) {
@@ -81,12 +94,18 @@
 /* Editor panel */
 .editor-panel {
   padding: var(--space-5);
-  overflow-y: auto;
   border-right: 1px solid var(--color-border);
   background-color: var(--color-bg);
   display: flex;
   flex-direction: column;
   gap: var(--space-5);
+}
+
+@media (min-width: 1025px) {
+  .editor-panel {
+    overflow-y: auto;
+    height: 100%;
+  }
 }
 
 @media (max-width: 1024px) {
@@ -198,8 +217,14 @@
   background-image:
     radial-gradient(circle at 12px 12px, rgba(255, 255, 255, 0.45) 1px, transparent 1px);
   background-size: 24px 24px;
-  overflow: auto;
   padding: var(--space-5);
+}
+
+@media (min-width: 1025px) {
+  .preview-panel {
+    overflow: auto;
+    height: 100%;
+  }
 }
 
 .preview-pages {
