@@ -1,5 +1,5 @@
 import { useCallback, useRef } from 'react'
-import { AppShell, Button, Group, Stack, Text, Title } from '@mantine/core'
+import { AppShell, Button, Group, Text, Title } from '@mantine/core'
 import { useLocalStorage } from '@mantine/hooks'
 import { EditorPanel } from './components/EditorPanel'
 import { PreviewPanel } from './components/PreviewPanel'
@@ -163,14 +163,19 @@ export default function App() {
     <AppShell header={{ height: 64 }} padding={0} className="app">
       <AppShell.Header>
         <Group h="100%" px="lg" justify="space-between" wrap="nowrap">
-          <Stack gap={0}>
-            <Title order={1} size="h4">
-              Brief nach DIN 5008
-            </Title>
-            <Text size="xs" c="dimmed">
-              Form B – Absender rechts
+          <Title
+            order={1}
+            fz={24}
+            fw={700}
+            lh={1}
+            ff='"Atkinson Hyperlegible", system-ui, sans-serif'
+            style={{ letterSpacing: '-0.01em' }}
+          >
+            briefsatz
+            <Text component="span" inherit fw={400} c="dimmed">
+              .de
             </Text>
-          </Stack>
+          </Title>
           <Button
             onClick={handlePrint}
             aria-label="Brief drucken oder als PDF speichern"
