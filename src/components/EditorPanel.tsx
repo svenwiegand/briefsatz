@@ -1,9 +1,21 @@
 import { useCallback } from 'react'
 import { Fieldset, SimpleGrid, Stack, Text, TextInput } from '@mantine/core'
 import { DateInput } from '@mantine/dates'
+import dayjs from 'dayjs'
+import customParseFormat from 'dayjs/plugin/customParseFormat'
 import { AddressFields } from './AddressFields'
 import { BodyEditor } from './BodyEditor'
 import type { Address, LetterData, LetterMeta, SenderContact } from '../types'
+
+dayjs.extend(customParseFormat)
+
+const DATE_FORMAT = 'DD.MM.YYYY'
+
+function parseGermanDate(input: string): Date | null {
+  if (!input.trim()) return null
+  const parsed = dayjs(input, DATE_FORMAT, true)
+  return parsed.isValid() ? parsed.toDate() : null
+}
 
 interface Props {
   data: LetterData
@@ -79,7 +91,8 @@ export function EditorPanel({ data, onChange }: Props) {
             <DateInput
               label="Datum"
               required
-              valueFormat="DD.MM.YYYY"
+              valueFormat={DATE_FORMAT}
+              dateParser={parseGermanDate}
               value={data.meta.date}
               onChange={(value) => setMetaField('date', toDate(value))}
               clearable
@@ -96,7 +109,8 @@ export function EditorPanel({ data, onChange }: Props) {
             />
             <DateInput
               label="Ihre Nachricht vom"
-              valueFormat="DD.MM.YYYY"
+              valueFormat={DATE_FORMAT}
+              dateParser={parseGermanDate}
               value={data.meta.yourMessage}
               onChange={(value) => setMetaField('yourMessage', toDate(value))}
               clearable
