@@ -207,6 +207,20 @@
   margin-bottom: 1mm;
 }
 
+/* BlockNote serialises nested blocks (paragraphs, lists) as flat
+ * siblings with `data-nesting-level` indicating the indent depth. */
+.letter-page__body-content [data-nesting-level] {
+  --nesting-level: 0;
+  margin-left: calc(var(--nesting-level) * 6mm);
+}
+
+.letter-page__body-content [data-nesting-level="1"] { --nesting-level: 1; }
+.letter-page__body-content [data-nesting-level="2"] { --nesting-level: 2; }
+.letter-page__body-content [data-nesting-level="3"] { --nesting-level: 3; }
+.letter-page__body-content [data-nesting-level="4"] { --nesting-level: 4; }
+.letter-page__body-content [data-nesting-level="5"] { --nesting-level: 5; }
+.letter-page__body-content [data-nesting-level="6"] { --nesting-level: 6; }
+
 /* Check-list items rendered from BlockNote (blocksToHTMLLossy emits
  * <li><input type="checkbox"><p>...</p></li>; suppress the inherited
  * disc marker and render a clean inline checkbox). */
