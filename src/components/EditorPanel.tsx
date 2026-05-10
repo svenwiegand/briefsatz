@@ -61,7 +61,6 @@ export function EditorPanel({ data, onChange }: Props) {
           </SimpleGrid>
           <TextInput
             label="Website"
-            description="optional"
             type="url"
             autoComplete="url"
             value={data.senderContact.website}
@@ -79,6 +78,7 @@ export function EditorPanel({ data, onChange }: Props) {
           <SimpleGrid cols={{ base: 1, sm: 2 }} spacing="sm">
             <DateInput
               label="Datum"
+              required
               valueFormat="DD.MM.YYYY"
               value={data.meta.date}
               onChange={(value) => setMetaField('date', toDate(value))}
@@ -86,19 +86,16 @@ export function EditorPanel({ data, onChange }: Props) {
             />
             <TextInput
               label="Unser Zeichen"
-              description="optional"
               value={data.meta.ourReference}
               onChange={(e) => setMetaField('ourReference', e.currentTarget.value)}
             />
             <TextInput
               label="Ihr Zeichen"
-              description="optional"
               value={data.meta.yourReference}
               onChange={(e) => setMetaField('yourReference', e.currentTarget.value)}
             />
             <DateInput
               label="Ihre Nachricht vom"
-              description="optional"
               valueFormat="DD.MM.YYYY"
               value={data.meta.yourMessage}
               onChange={(value) => setMetaField('yourMessage', toDate(value))}
@@ -107,11 +104,13 @@ export function EditorPanel({ data, onChange }: Props) {
           </SimpleGrid>
           <TextInput
             label="Betreff"
+            required
             value={data.meta.subject}
             onChange={(e) => setMetaField('subject', e.currentTarget.value)}
           />
           <TextInput
             label="Anrede"
+            required
             value={data.meta.greeting}
             onChange={(e) => setMetaField('greeting', e.currentTarget.value)}
           />
@@ -133,11 +132,13 @@ export function EditorPanel({ data, onChange }: Props) {
         <Stack gap="sm">
           <TextInput
             label="Grußformel"
+            required
             value={data.meta.closing}
             onChange={(e) => setMetaField('closing', e.currentTarget.value)}
           />
           <TextInput
             label="Unterschrift (Name)"
+            required
             value={data.meta.signature}
             onChange={(e) => setMetaField('signature', e.currentTarget.value)}
           />

@@ -21,6 +21,7 @@ export function AddressFields({
     <SimpleGrid cols={1} spacing="sm">
       <TextInput
         label="Name"
+        required
         autoComplete="name"
         value={value.name}
         onChange={(e) => update('name', e.currentTarget.value)}
@@ -28,7 +29,6 @@ export function AddressFields({
       {showOrganization && (
         <TextInput
           label="Firma / Organisation"
-          description="optional"
           autoComplete="organization"
           value={value.organization}
           onChange={(e) => update('organization', e.currentTarget.value)}
@@ -37,26 +37,26 @@ export function AddressFields({
       {showAddressLine && (
         <TextInput
           label="Zusatz / Abteilung"
-          description="optional"
           value={value.addressLine}
           onChange={(e) => update('addressLine', e.currentTarget.value)}
         />
       )}
       <TextInput
         label="Straße & Hausnummer"
+        required
         autoComplete="street-address"
         value={value.street}
         onChange={(e) => update('street', e.currentTarget.value)}
       />
       <TextInput
         label="PLZ & Ort"
+        required
         autoComplete="postal-code"
         value={value.zipCity}
         onChange={(e) => update('zipCity', e.currentTarget.value)}
       />
       <TextInput
         label="Land"
-        description="nur bei Auslandsbriefen"
         autoComplete="country-name"
         value={value.country}
         onChange={(e) => update('country', e.currentTarget.value)}
