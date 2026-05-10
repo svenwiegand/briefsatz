@@ -4,7 +4,7 @@
 
 .app__main {
   display: grid;
-  grid-template-columns: minmax(380px, 1fr) minmax(0, 1.4fr);
+  grid-template-columns: var(--editor-width, 42%) 6px minmax(0, 1fr);
   height: calc(100vh - 64px);
   min-height: 0;
 }
@@ -19,6 +19,52 @@
     grid-template-columns: 1fr;
     height: auto;
   }
+
+  .splitter {
+    display: none;
+  }
+}
+
+/* Splitter between editor and preview */
+.splitter {
+  position: relative;
+  background-color: var(--mantine-color-default-border);
+  cursor: col-resize;
+  touch-action: none;
+  transition: background-color 120ms ease;
+}
+
+.splitter::before {
+  /* expand the hit area for easier grabbing without changing the visual width */
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: -4px;
+  right: -4px;
+}
+
+.splitter:hover,
+.splitter:focus-visible {
+  background-color: var(--mantine-primary-color-filled, #1d4ed8);
+}
+
+.splitter:focus-visible {
+  outline: 2px solid var(--mantine-primary-color-filled, #1d4ed8);
+  outline-offset: 2px;
+}
+
+.splitter__handle {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 2px;
+  height: 32px;
+  border-radius: 1px;
+  background-color: var(--mantine-color-text);
+  opacity: 0.25;
+  pointer-events: none;
 }
 
 .editor-panel {

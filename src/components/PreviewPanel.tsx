@@ -22,12 +22,37 @@ type PageContent = {
   showClosing: boolean
 }
 
+const PAGE_WIDTH_MM = 210
+const PAGE_WIDTH_PX = PAGE_WIDTH_MM * MM_TO_PX
+
 export function PreviewPanel({ data }: { data: LetterData }) {
+  const sectionRef = useRef<HTMLElement>(null)
   const measureRef = useRef<HTMLDivElement>(null)
   const preambleRef = useRef<HTMLDivElement>(null)
   const [pages, setPages] = useState<PageContent[]>([
     { bodyHtml: '', showClosing: true },
   ])
+  const [scale, setScale] = useState(1)
+
+  useEffect(() => {
+    const el = sectionRef.current
+    if (!el) return
+
+    const compute = () => {
+      const cs = getComputedStyle(el)
+      const padLeft = parseFloat(cs.paddingLeft) || 0
+      const padRight = parseFloat(cs.paddingRight) || 0
+      const usable = el.clientWidth - padLeft - padRight
+      if (usable <= 0) return
+      const next = Math.min(1, usable / PAGE_WIDTH_PX)
+      setScale((prev) => (Math.abs(prev - next) < 0.001 ? prev : next))
+    }
+
+    compute()
+    const ro = new ResizeObserver(compute)
+    ro.observe(el)
+    return () => ro.disconnect()
+  }, [])
 
   useEffect(() => {
     const node = measureRef.current
@@ -101,7 +126,12 @@ export function PreviewPanel({ data }: { data: LetterData }) {
   } as const
 
   return (
-    <section className="preview-panel" aria-label="Briefvorschau">
+    <section
+      ref={sectionRef}
+      className="preview-panel"
+      aria-label="Briefvorschau"
+      style={{ ['--preview-scale' as string]: scale }}
+    >
       <div className="preview-pages" id="print-root">
         {pages.map((page, i) => (
           <LetterPage

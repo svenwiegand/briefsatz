@@ -26,6 +26,9 @@
   overflow: hidden;
   page-break-after: always;
   break-after: page;
+  /* Scaled to fit available preview width (set via --preview-scale on the
+   * preview panel). Print output is forced back to 1:1 below. */
+  zoom: var(--preview-scale, 1);
 }
 
 .letter-page:last-of-type {
@@ -362,14 +365,16 @@
     background-color: #ffffff !important;
   }
 
-  .app__header,
+  .mantine-AppShell-header,
   .editor-panel,
+  .splitter,
   .preview-measure {
     display: none !important;
   }
 
   .app,
   .app__main,
+  .mantine-AppShell-main,
   .preview-panel,
   .preview-pages {
     display: block !important;
@@ -379,6 +384,7 @@
     overflow: visible !important;
     height: auto !important;
     min-height: 0 !important;
+    grid-template-columns: none !important;
   }
 
   .preview-panel {
@@ -390,6 +396,7 @@
     margin: 0 !important;
     page-break-after: always;
     break-after: page;
+    zoom: 1 !important;
   }
 
   .letter-page:last-of-type {
