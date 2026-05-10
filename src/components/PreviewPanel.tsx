@@ -94,7 +94,8 @@ export function PreviewPanel({ data }: { data: LetterData }) {
 
   const previewMeasureStyle = {
     width: `${BODY_WIDTH_MM}mm`,
-    fontFamily: '"Helvetica Neue", Helvetica, Arial, sans-serif',
+    fontFamily:
+      '"Atkinson Hyperlegible", "Helvetica Neue", Helvetica, Arial, sans-serif',
     fontSize: '11pt',
     lineHeight: 1.4,
   } as const

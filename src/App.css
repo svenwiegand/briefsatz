@@ -46,6 +46,9 @@
 .body-editor .bn-editor {
   min-height: 240px;
   padding: var(--mantine-spacing-sm);
+  font-family: "Atkinson Hyperlegible", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: 11pt;
+  line-height: 1.4;
 }
 
 /* Preview panel */
