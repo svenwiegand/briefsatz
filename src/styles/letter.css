@@ -168,7 +168,10 @@
 }
 
 .letter-page__body-content {
-  /* Body text from BlockNote */
+  text-align: justify;
+  hyphens: auto;
+  -webkit-hyphens: auto;
+  hyphenate-limit-chars: 6 3 3;
 }
 
 .letter-page__body-content > * {
@@ -184,6 +187,8 @@
 .letter-page__body-content h3 {
   font-weight: 600;
   margin: 4mm 0 2mm;
+  text-align: left;
+  hyphens: manual;
 }
 
 .letter-page__body-content h1 { font-size: 14pt; }
