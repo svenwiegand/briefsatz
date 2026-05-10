@@ -9,6 +9,13 @@
   min-height: 0;
 }
 
+/* Prevent grid items from expanding the row to their content's intrinsic
+ * (min-content) width. The A4 preview page would otherwise force the
+ * preview panel to be wider than its column. */
+.app__main > * {
+  min-width: 0;
+}
+
 @media (max-width: 1024px) {
   .app {
     height: auto;
@@ -16,7 +23,7 @@
   }
 
   .app__main {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
     height: auto;
   }
 
@@ -104,12 +111,15 @@
     radial-gradient(circle at 12px 12px, rgba(255, 255, 255, 0.45) 1px, transparent 1px);
   background-size: 24px 24px;
   padding: var(--mantine-spacing-lg);
-  overflow: auto;
+  /* Always clip horizontally so the A4 page can never push the panel
+   * wider than its grid cell – the page is scaled via `zoom` instead. */
+  overflow-x: hidden;
+  overflow-y: auto;
 }
 
 @media (max-width: 1024px) {
   .preview-panel {
-    overflow: visible;
+    overflow-y: visible;
   }
 }
 
