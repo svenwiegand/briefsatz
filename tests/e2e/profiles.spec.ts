@@ -32,7 +32,7 @@ async function readProfiles(page: Page) {
   return JSON.parse(raw!) as Array<{
     id: string
     sender: { name: string; organization: string; street: string }
-    contact: { email: string }
+    contact: { email: string; phone: string; fax: string; website: string }
     signatureName: string
     hasSignatureImage: boolean
   }>
@@ -298,6 +298,60 @@ test.describe('Sender profiles', () => {
     expect(src).toMatch(/^blob:/)
   })
 
+  test('editing the fax field marks the profile as dirty and persists on save', async ({
+    page,
+  }) => {
+    await gotoApp(page)
+    await waitForProfileCount(page, 1)
+
+    await page.getByLabel(field('Telefax')).fill('+49 30 9999999')
+
+    const saveButton = page.getByRole('button', { name: /^Speichern$/ })
+    await expect(saveButton).toBeVisible()
+    await saveButton.click()
+    await expect(saveButton).toBeHidden()
+
+    const profiles = await readProfiles(page)
+    expect(profiles).toHaveLength(1)
+    expect(profiles[0].contact.fax).toBe('+49 30 9999999')
+  })
+
+  test('each profile keeps its own fax value; editing one does not leak into another', async ({
+    page,
+  }) => {
+    await gotoApp(page)
+    await waitForProfileCount(page, 1)
+
+    // Set fax on the bootstrap profile (A) and save.
+    await page.getByLabel(field('Telefax')).fill('111-AAA')
+    await page.getByRole('button', { name: /^Speichern$/ }).click()
+    await expect(page.getByRole('button', { name: /^Speichern$/ })).toBeHidden()
+
+    // Create profile B (empty) and give it a different fax.
+    await page.getByRole('button', { name: 'Neuer Absender' }).click()
+    await waitForProfileCount(page, 2)
+    await expect(page.getByLabel(field('Telefax'))).toHaveValue('')
+    await page.getByLabel(field('Name')).first().fill('Berta Beispiel')
+    await page.getByLabel(field('Telefax')).fill('222-BBB')
+    await page.getByRole('button', { name: /^Speichern$/ }).click()
+    await expect(page.getByRole('button', { name: /^Speichern$/ })).toBeHidden()
+
+    // Switch back to A → its fax is still 111-AAA.
+    await page.getByRole('button', { name: /Absender-Profil/ }).click()
+    await page.getByRole('option', { name: /Max Mustermann/ }).click()
+    await expect(page.getByLabel(field('Telefax'))).toHaveValue('111-AAA')
+
+    // And forward to B → BBB.
+    await page.getByRole('button', { name: /Absender-Profil/ }).click()
+    await page.getByRole('option', { name: /Berta Beispiel/ }).click()
+    await expect(page.getByLabel(field('Telefax'))).toHaveValue('222-BBB')
+
+    // Storage agrees: two distinct fax values, one per profile.
+    const profiles = await readProfiles(page)
+    const faxValues = profiles.map((p) => p.contact.fax).sort()
+    expect(faxValues).toEqual(['111-AAA', '222-BBB'])
+  })
+
   test('"Unterschrift anzeigen" switch is hidden when no signature is uploaded', async ({
     page,
   }) => {
@@ -305,7 +359,7 @@ test.describe('Sender profiles', () => {
     await waitForProfileCount(page, 1)
 
     await expect(
-      page.getByLabel('Unterschrift im Brief anzeigen'),
+      page.getByLabel('Unterschrift drucken'),
     ).toHaveCount(0)
   })
 
@@ -322,7 +376,7 @@ test.describe('Sender profiles', () => {
     })
     await expect(page.locator('.letter-page__signature-image')).toBeVisible()
 
-    const toggle = page.getByLabel('Unterschrift im Brief anzeigen')
+    const toggle = page.getByLabel('Unterschrift drucken')
     await expect(toggle).toBeVisible()
     await expect(toggle).toBeChecked()
 
@@ -357,14 +411,14 @@ test.describe('Sender profiles', () => {
     })
     await page.getByRole('button', { name: /^Speichern$/ }).click()
     await expect(page.getByRole('button', { name: /^Speichern$/ })).toBeHidden()
-    await page.getByLabel('Unterschrift im Brief anzeigen').uncheck()
+    await page.getByLabel('Unterschrift drucken').uncheck()
 
     await page.reload()
     await page.waitForFunction(() => document.fonts.status === 'loaded')
     await waitForProfileCount(page, 1)
 
     await expect(
-      page.getByLabel('Unterschrift im Brief anzeigen'),
+      page.getByLabel('Unterschrift drucken'),
     ).not.toBeChecked()
     await expect(page.locator('.letter-page__signature-image')).toHaveCount(0)
   })

@@ -105,20 +105,26 @@ export function EditorPanel({
           <AddressFields value={data.sender} onChange={updateSender} />
           <SimpleGrid cols={{ base: 1, sm: 2 }} spacing="sm">
             <TextInput
-              label="E-Mail"
-              type="email"
-              autoComplete="email"
-              value={data.senderContact.email}
-              onChange={(e) => setContactField('email', e.currentTarget.value)}
-            />
-            <TextInput
               label="Telefon"
               type="tel"
               autoComplete="tel"
               value={data.senderContact.phone}
               onChange={(e) => setContactField('phone', e.currentTarget.value)}
             />
+            <TextInput
+              label="Telefax"
+              type="tel"
+              value={data.senderContact.fax}
+              onChange={(e) => setContactField('fax', e.currentTarget.value)}
+            />
           </SimpleGrid>
+          <TextInput
+            label="E-Mail"
+            type="email"
+            autoComplete="email"
+            value={data.senderContact.email}
+            onChange={(e) => setContactField('email', e.currentTarget.value)}
+          />
           <TextInput
             label="Website"
             type="url"

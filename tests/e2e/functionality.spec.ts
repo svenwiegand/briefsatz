@@ -47,6 +47,23 @@ test.describe('Functionality', () => {
     )
   })
 
+  test('editing sender contact fields (phone, fax, email, website) all flow into the preview', async ({
+    page,
+  }) => {
+    await gotoApp(page)
+
+    await page.getByLabel(field('Telefon')).fill('+49 30 1111111')
+    await page.getByLabel(field('Telefax')).fill('+49 30 2222222')
+    await page.getByLabel(field('E-Mail')).fill('contact@example.de')
+    await page.getByLabel(field('Website')).fill('https://example.de')
+
+    const contact = page.locator('.letter-page__sender-contact').first()
+    await expect(contact).toContainText('Tel.: +49 30 1111111')
+    await expect(contact).toContainText('Fax: +49 30 2222222')
+    await expect(contact).toContainText('contact@example.de')
+    await expect(contact).toContainText('https://example.de')
+  })
+
   test('editing the recipient form updates the preview live', async ({ page }) => {
     await gotoApp(page)
 

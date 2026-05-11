@@ -22,6 +22,7 @@ const EMPTY_ADDRESS: Address = {
 const EMPTY_CONTACT: SenderContact = {
   email: '',
   phone: '',
+  fax: '',
   website: '',
 }
 

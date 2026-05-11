@@ -29,6 +29,7 @@ const EMPTY_ADDRESS: Address = {
 const EMPTY_CONTACT: SenderContact = {
   email: '',
   phone: '',
+  fax: '',
   website: '',
 }
 
@@ -44,6 +45,7 @@ const initialData: LetterData = {
   senderContact: {
     email: 'max@example.com',
     phone: '+49 30 1234567',
+    fax: '',
     website: '',
   },
   signatureName: 'Max Mustermann',
@@ -137,7 +139,7 @@ const addressKeys: (keyof Address)[] = [
   'zipCity',
   'country',
 ]
-const contactKeys: (keyof SenderContact)[] = ['email', 'phone', 'website']
+const contactKeys: (keyof SenderContact)[] = ['email', 'phone', 'fax', 'website']
 
 function addressEqual(a: Address, b: Address): boolean {
   return addressKeys.every((k) => a[k] === b[k])

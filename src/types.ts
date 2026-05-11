@@ -10,6 +10,7 @@ export interface Address {
 export interface SenderContact {
   email: string;
   phone: string;
+  fax: string;
   website: string;
 }
 

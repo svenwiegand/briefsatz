@@ -107,9 +107,13 @@ function SenderBlock({ data }: { data: LetterData }) {
       {sender.street && <span className="letter-page__sender-line">{sender.street}</span>}
       {sender.zipCity && <span className="letter-page__sender-line">{sender.zipCity}</span>}
       {sender.country && <span className="letter-page__sender-line">{sender.country}</span>}
-      {(senderContact.phone || senderContact.email || senderContact.website) && (
+      {(senderContact.phone ||
+        senderContact.fax ||
+        senderContact.email ||
+        senderContact.website) && (
         <span className="letter-page__sender-contact">
           {senderContact.phone && <span>Tel.: {senderContact.phone}</span>}
+          {senderContact.fax && <span>Fax: {senderContact.fax}</span>}
           {senderContact.email && <span>{senderContact.email}</span>}
           {senderContact.website && <span>{senderContact.website}</span>}
         </span>

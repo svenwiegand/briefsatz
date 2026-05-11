@@ -201,7 +201,13 @@ test.describe('Body styling', () => {
       .first()
       .evaluate((el) => {
         const cs = getComputedStyle(el)
-        return { textAlign: cs.textAlign, hyphens: cs.hyphens || cs.webkitHyphens }
+        return {
+          textAlign: cs.textAlign,
+          hyphens:
+            cs.hyphens ||
+            (cs as CSSStyleDeclaration & { webkitHyphens?: string })
+              .webkitHyphens,
+        }
       })
     expect(styles.textAlign).toBe('justify')
     expect(styles.hyphens).toBe('auto')
