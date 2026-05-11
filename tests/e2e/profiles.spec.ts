@@ -298,6 +298,77 @@ test.describe('Sender profiles', () => {
     expect(src).toMatch(/^blob:/)
   })
 
+  test('"Unterschrift anzeigen" switch is hidden when no signature is uploaded', async ({
+    page,
+  }) => {
+    await gotoApp(page)
+    await waitForProfileCount(page, 1)
+
+    await expect(
+      page.getByLabel('Unterschrift im Brief anzeigen'),
+    ).toHaveCount(0)
+  })
+
+  test('"Unterschrift anzeigen" appears once a signature exists, defaults to on, and toggles the letter image without touching the profile', async ({
+    page,
+  }) => {
+    await gotoApp(page)
+    await waitForProfileCount(page, 1)
+
+    await page.locator('input[type="file"]').setInputFiles({
+      name: 'signature.png',
+      mimeType: 'image/png',
+      buffer: TINY_PNG,
+    })
+    await expect(page.locator('.letter-page__signature-image')).toBeVisible()
+
+    const toggle = page.getByLabel('Unterschrift im Brief anzeigen')
+    await expect(toggle).toBeVisible()
+    await expect(toggle).toBeChecked()
+
+    await page.getByRole('button', { name: /^Speichern$/ }).click()
+    await expect(page.getByRole('button', { name: /^Speichern$/ })).toBeHidden()
+
+    // Turn the switch off → letter signature disappears, profile keeps the image.
+    await toggle.uncheck()
+    await expect(page.locator('.letter-page__signature-image')).toHaveCount(0)
+    // The thumbnail in the editor stays visible so the user can still see what
+    // they have on file.
+    await expect(page.getByAltText('Unterschrift')).toBeVisible()
+
+    const profiles = await readProfiles(page)
+    expect(profiles[0].hasSignatureImage).toBe(true)
+
+    // Toggle back on → image returns.
+    await toggle.check()
+    await expect(page.locator('.letter-page__signature-image')).toBeVisible()
+  })
+
+  test('"Unterschrift anzeigen" state persists across reload', async ({
+    page,
+  }) => {
+    await gotoApp(page)
+    await waitForProfileCount(page, 1)
+
+    await page.locator('input[type="file"]').setInputFiles({
+      name: 'signature.png',
+      mimeType: 'image/png',
+      buffer: TINY_PNG,
+    })
+    await page.getByRole('button', { name: /^Speichern$/ }).click()
+    await expect(page.getByRole('button', { name: /^Speichern$/ })).toBeHidden()
+    await page.getByLabel('Unterschrift im Brief anzeigen').uncheck()
+
+    await page.reload()
+    await page.waitForFunction(() => document.fonts.status === 'loaded')
+    await waitForProfileCount(page, 1)
+
+    await expect(
+      page.getByLabel('Unterschrift im Brief anzeigen'),
+    ).not.toBeChecked()
+    await expect(page.locator('.letter-page__signature-image')).toHaveCount(0)
+  })
+
   test('removing the signature and saving clears the image from the letter', async ({
     page,
   }) => {

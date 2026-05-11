@@ -21,6 +21,9 @@ export interface LetterMeta {
   subject: string;
   greeting: string;
   closing: string;
+  /** When false, the stored signature image is hidden from the rendered letter
+   *  (e.g. so the user can hand-sign a printed copy). The profile is not touched. */
+  showSignatureImage: boolean;
 }
 
 /**

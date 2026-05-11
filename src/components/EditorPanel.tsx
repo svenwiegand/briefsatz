@@ -1,5 +1,12 @@
 import { useCallback } from 'react'
-import { Fieldset, SimpleGrid, Stack, Text, TextInput } from '@mantine/core'
+import {
+  Fieldset,
+  SimpleGrid,
+  Stack,
+  Switch,
+  Text,
+  TextInput,
+} from '@mantine/core'
 import { DateInput } from '@mantine/dates'
 import dayjs from 'dayjs'
 import customParseFormat from 'dayjs/plugin/customParseFormat'
@@ -202,6 +209,15 @@ export function EditorPanel({
             value={data.meta.closing}
             onChange={(e) => setMetaField('closing', e.currentTarget.value)}
           />
+          {signatureUrl && (
+            <Switch
+              label="Unterschrift drucken"
+              checked={data.meta.showSignatureImage}
+              onChange={(e) =>
+                setMetaField('showSignatureImage', e.currentTarget.checked)
+              }
+            />
+          )}
         </Stack>
       </Fieldset>
     </Stack>

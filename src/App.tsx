@@ -63,6 +63,7 @@ const initialData: LetterData = {
     subject: 'Ihr Anliegen',
     greeting: 'Sehr geehrte Damen und Herren,',
     closing: 'Mit freundlichen Grüßen',
+    showSignatureImage: true,
   },
   bodyHtml: '',
   bodyBlocks: [],
@@ -403,7 +404,10 @@ export default function App() {
           ariaValueMin={EDITOR_PERCENT_MIN}
           ariaValueMax={EDITOR_PERCENT_MAX}
         />
-        <PreviewPanel data={data} signatureUrl={signatureUrl} />
+        <PreviewPanel
+          data={data}
+          signatureUrl={data.meta.showSignatureImage ? signatureUrl : null}
+        />
       </AppShell.Main>
     </AppShell>
   )
