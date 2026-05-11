@@ -370,6 +370,16 @@
 
 .letter-page__signature-space {
   height: 18mm;
+  display: flex;
+  align-items: flex-end;
+}
+
+.letter-page__signature-image {
+  max-height: 18mm;
+  max-width: 80mm;
+  width: auto;
+  height: auto;
+  object-fit: contain;
 }
 
 .letter-page__signature-name {

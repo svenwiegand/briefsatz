@@ -21,7 +21,6 @@ export interface LetterMeta {
   subject: string;
   greeting: string;
   closing: string;
-  signature: string;
 }
 
 /**
@@ -35,8 +34,18 @@ export type StoredBlocks = unknown[];
 export interface LetterData {
   sender: Address;
   senderContact: SenderContact;
+  signatureName: string;
   recipient: Address;
   meta: LetterMeta;
   bodyHtml: string;
   bodyBlocks: StoredBlocks;
+}
+
+export interface SenderProfile {
+  id: string;
+  sender: Address;
+  contact: SenderContact;
+  signatureName: string;
+  /** True when an associated signature image is persisted in IndexedDB. */
+  hasSignatureImage: boolean;
 }

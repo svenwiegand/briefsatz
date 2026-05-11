@@ -1,10 +1,13 @@
-import { useCallback, useRef } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { AppShell, Button, Group, Text, Title } from '@mantine/core'
 import { useLocalStorage } from '@mantine/hooks'
 import { EditorPanel } from './components/EditorPanel'
 import { PreviewPanel } from './components/PreviewPanel'
 import { Splitter } from './components/Splitter'
-import type { LetterData } from './types'
+import { useObjectUrl } from './hooks/useObjectUrl'
+import { useSenderProfiles } from './hooks/useSenderProfiles'
+import { loadSignatureBlob } from './storage/signatures'
+import type { Address, LetterData, SenderContact } from './types'
 import './App.css'
 import './styles/letter.css'
 
@@ -13,6 +16,21 @@ const EDITOR_PERCENT_MAX = 70
 const EDITOR_PERCENT_DEFAULT = 42
 
 const DATA_STORAGE_KEY = 'letter-app:data'
+
+const EMPTY_ADDRESS: Address = {
+  name: '',
+  organization: '',
+  addressLine: '',
+  street: '',
+  zipCity: '',
+  country: '',
+}
+
+const EMPTY_CONTACT: SenderContact = {
+  email: '',
+  phone: '',
+  website: '',
+}
 
 const initialData: LetterData = {
   sender: {
@@ -28,6 +46,7 @@ const initialData: LetterData = {
     phone: '+49 30 1234567',
     website: '',
   },
+  signatureName: 'Max Mustermann',
   recipient: {
     name: 'Erika Beispiel',
     organization: 'Beispiel GmbH',
@@ -44,7 +63,6 @@ const initialData: LetterData = {
     subject: 'Ihr Anliegen',
     greeting: 'Sehr geehrte Damen und Herren,',
     closing: 'Mit freundlichen Grüßen',
-    signature: 'Max Mustermann',
   },
   bodyHtml: '',
   bodyBlocks: [],
@@ -88,6 +106,8 @@ function deserializeData(value: string | undefined): LetterData {
         ...initialData.senderContact,
         ...(parsed.senderContact ?? {}),
       },
+      signatureName:
+        typeof parsed.signatureName === 'string' ? parsed.signatureName : '',
       recipient: { ...initialData.recipient, ...(parsed.recipient ?? {}) },
       meta: {
         ...initialData.meta,
@@ -108,6 +128,24 @@ function clamp(value: number, min: number, max: number) {
   return Math.max(min, Math.min(max, value))
 }
 
+const addressKeys: (keyof Address)[] = [
+  'name',
+  'organization',
+  'addressLine',
+  'street',
+  'zipCity',
+  'country',
+]
+const contactKeys: (keyof SenderContact)[] = ['email', 'phone', 'website']
+
+function addressEqual(a: Address, b: Address): boolean {
+  return addressKeys.every((k) => a[k] === b[k])
+}
+
+function contactEqual(a: SenderContact, b: SenderContact): boolean {
+  return contactKeys.every((k) => a[k] === b[k])
+}
+
 export default function App() {
   const [data, setData] = useLocalStorage<LetterData>({
     key: DATA_STORAGE_KEY,
@@ -122,6 +160,161 @@ export default function App() {
     getInitialValueInEffect: false,
   })
   const mainRef = useRef<HTMLDivElement>(null)
+
+  const profiles = useSenderProfiles()
+  const [signatureBlob, setSignatureBlob] = useState<Blob | null>(null)
+  const [signatureDirty, setSignatureDirty] = useState(false)
+  const signatureUrl = useObjectUrl(signatureBlob)
+
+  const dirty = useMemo(() => {
+    if (!profiles.activeProfile) return false
+    if (signatureDirty) return true
+    return (
+      !addressEqual(data.sender, profiles.activeProfile.sender) ||
+      !contactEqual(data.senderContact, profiles.activeProfile.contact) ||
+      data.signatureName !== profiles.activeProfile.signatureName
+    )
+  }, [
+    profiles.activeProfile,
+    data.sender,
+    data.senderContact,
+    data.signatureName,
+    signatureDirty,
+  ])
+
+  const handleSelectProfile = useCallback(
+    async (id: string) => {
+      const snapshot = await profiles.selectProfile(id)
+      if (!snapshot) return
+      setData((prev) => ({
+        ...prev,
+        sender: snapshot.sender,
+        senderContact: snapshot.contact,
+        signatureName: snapshot.signatureName,
+      }))
+      setSignatureBlob(snapshot.signatureBlob)
+      setSignatureDirty(false)
+    },
+    [profiles, setData],
+  )
+
+  const handleCreateEmpty = useCallback(() => {
+    profiles.createEmpty()
+    setData((prev) => ({
+      ...prev,
+      sender: { ...EMPTY_ADDRESS },
+      senderContact: { ...EMPTY_CONTACT },
+      signatureName: '',
+    }))
+    setSignatureBlob(null)
+    setSignatureDirty(false)
+  }, [profiles, setData])
+
+  const handleClone = useCallback(async () => {
+    const cloned = await profiles.addFromSnapshot(
+      {
+        sender: data.sender,
+        contact: data.senderContact,
+        signatureName: data.signatureName,
+        signatureBlob,
+      },
+      { withCopySuffix: true },
+    )
+    setData((prev) => ({
+      ...prev,
+      sender: cloned.sender,
+      senderContact: cloned.contact,
+      signatureName: cloned.signatureName,
+    }))
+    setSignatureDirty(false)
+  }, [
+    profiles,
+    data.sender,
+    data.senderContact,
+    data.signatureName,
+    signatureBlob,
+    setData,
+  ])
+
+  const handleSave = useCallback(async () => {
+    await profiles.saveActive({
+      sender: data.sender,
+      contact: data.senderContact,
+      signatureName: data.signatureName,
+      signatureBlob,
+      signatureDirty,
+    })
+    setSignatureDirty(false)
+  }, [
+    profiles,
+    data.sender,
+    data.senderContact,
+    data.signatureName,
+    signatureBlob,
+    signatureDirty,
+  ])
+
+  const handleDelete = useCallback(async () => {
+    const next = await profiles.deleteActive()
+    if (next) {
+      setData((prev) => ({
+        ...prev,
+        sender: next.sender,
+        senderContact: next.contact,
+        signatureName: next.signatureName,
+      }))
+      setSignatureBlob(next.signatureBlob)
+    } else {
+      profiles.createEmpty()
+      setData((prev) => ({
+        ...prev,
+        sender: { ...EMPTY_ADDRESS },
+        senderContact: { ...EMPTY_CONTACT },
+        signatureName: '',
+      }))
+      setSignatureBlob(null)
+    }
+    setSignatureDirty(false)
+  }, [profiles, setData])
+
+  const handleChangeSignature = useCallback((blob: Blob | null) => {
+    setSignatureBlob(blob)
+    setSignatureDirty(true)
+  }, [])
+
+  const bootstrapped = useRef(false)
+  useEffect(() => {
+    if (bootstrapped.current) return
+    bootstrapped.current = true
+    if (profiles.profiles.length > 0) return
+    void profiles.addFromSnapshot({
+      sender: data.sender,
+      contact: data.senderContact,
+      signatureName: data.signatureName,
+      signatureBlob,
+    })
+    // Intentionally empty deps — this is a one-shot bootstrap on first mount.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
+  // Hydrate the signature blob from IndexedDB when the active profile claims
+  // one but our in-memory state is empty (e.g. right after a reload). The
+  // `signatureDirty` guard makes sure we don't stomp on pending user edits
+  // (uploaded but not yet saved) when the profile state ticks afterwards.
+  const activeProfileId = profiles.activeProfile?.id
+  const activeHasSignature = profiles.activeProfile?.hasSignatureImage ?? false
+  useEffect(() => {
+    if (signatureDirty) return
+    if (!activeProfileId || !activeHasSignature) return
+    if (signatureBlob !== null) return
+    let cancelled = false
+    loadSignatureBlob(activeProfileId).then((blob) => {
+      if (!cancelled && blob) setSignatureBlob(blob)
+    })
+    return () => {
+      cancelled = true
+    }
+  }, [activeProfileId, activeHasSignature, signatureBlob, signatureDirty])
 
   const handlePrint = useCallback(() => {
     window.print()
@@ -189,7 +382,20 @@ export default function App() {
         ref={mainRef}
         style={{ ['--editor-width' as string]: `${editorPct}%` }}
       >
-        <EditorPanel data={data} onChange={setData} />
+        <EditorPanel
+          data={data}
+          onChange={setData}
+          profiles={profiles.profiles}
+          activeId={profiles.activeId}
+          dirty={dirty}
+          signatureUrl={signatureUrl}
+          onSelectProfile={handleSelectProfile}
+          onCreateEmpty={handleCreateEmpty}
+          onClone={handleClone}
+          onSave={handleSave}
+          onDelete={handleDelete}
+          onChangeSignature={handleChangeSignature}
+        />
         <Splitter
           onDrag={handleSplitterDrag}
           onKeyboardAdjust={handleKeyboardAdjust}
@@ -197,7 +403,7 @@ export default function App() {
           ariaValueMin={EDITOR_PERCENT_MIN}
           ariaValueMax={EDITOR_PERCENT_MAX}
         />
-        <PreviewPanel data={data} />
+        <PreviewPanel data={data} signatureUrl={signatureUrl} />
       </AppShell.Main>
     </AppShell>
   )

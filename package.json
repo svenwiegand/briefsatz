@@ -19,7 +19,9 @@
     "@mantine/core": "^9.1.1",
     "@mantine/dates": "^9.1.1",
     "@mantine/hooks": "^9.1.1",
+    "@tabler/icons-react": "^3.44.0",
     "dayjs": "^1.11.20",
+    "idb-keyval": "^6.2.2",
     "react": "^19.2.5",
     "react-dom": "^19.2.5"
   },

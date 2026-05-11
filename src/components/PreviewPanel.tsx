@@ -25,7 +25,12 @@ type PageContent = {
 const PAGE_WIDTH_MM = 210
 const PAGE_WIDTH_PX = PAGE_WIDTH_MM * MM_TO_PX
 
-export function PreviewPanel({ data }: { data: LetterData }) {
+interface PreviewPanelProps {
+  data: LetterData
+  signatureUrl: string | null
+}
+
+export function PreviewPanel({ data, signatureUrl }: PreviewPanelProps) {
   const sectionRef = useRef<HTMLElement>(null)
   const measureRef = useRef<HTMLDivElement>(null)
   const preambleRef = useRef<HTMLDivElement>(null)
@@ -141,6 +146,7 @@ export function PreviewPanel({ data }: { data: LetterData }) {
             totalPages={pages.length}
             bodyHtml={page.bodyHtml}
             showClosing={page.showClosing}
+            signatureUrl={page.showClosing ? signatureUrl : null}
           />
         ))}
       </div>

@@ -7,7 +7,11 @@
       "Bash(which npm; ls ~/.nvm/versions/node/v24.15.0/bin/npm)",
       "mcp__Claude_Preview__preview_start",
       "Bash(chmod +x /Users/sven.wiegand/source/private/letter/.claude/run-dev.sh)",
-      "Bash(python3 -c \"import json,sys; p=json.load\\(sys.stdin\\); print\\(json.dumps\\({**p['dependencies']}, indent=2\\)\\)\")"
+      "Bash(python3 -c \"import json,sys; p=json.load\\(sys.stdin\\); print\\(json.dumps\\({**p['dependencies']}, indent=2\\)\\)\")",
+      "Bash(npm install *)",
+      "Bash(npx tsc *)",
+      "Bash(npm run *)",
+      "Bash(npx playwright *)"
     ]
   }
 }

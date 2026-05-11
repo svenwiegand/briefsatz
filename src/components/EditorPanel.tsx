@@ -5,7 +5,15 @@ import dayjs from 'dayjs'
 import customParseFormat from 'dayjs/plugin/customParseFormat'
 import { AddressFields } from './AddressFields'
 import { BodyEditor, type BodyEditorChange } from './BodyEditor'
-import type { Address, LetterData, LetterMeta, SenderContact } from '../types'
+import { SenderProfileSelector } from './SenderProfileSelector'
+import { SignatureField } from './SignatureField'
+import type {
+  Address,
+  LetterData,
+  LetterMeta,
+  SenderContact,
+  SenderProfile,
+} from '../types'
 
 dayjs.extend(customParseFormat)
 
@@ -20,9 +28,32 @@ function parseGermanDate(input: string): Date | null {
 interface Props {
   data: LetterData
   onChange: (data: LetterData) => void
+  profiles: SenderProfile[]
+  activeId: string | null
+  dirty: boolean
+  signatureUrl: string | null
+  onSelectProfile: (id: string) => void
+  onCreateEmpty: () => void
+  onClone: () => void
+  onSave: () => void
+  onDelete: () => void
+  onChangeSignature: (blob: Blob | null) => void
 }
 
-export function EditorPanel({ data, onChange }: Props) {
+export function EditorPanel({
+  data,
+  onChange,
+  profiles,
+  activeId,
+  dirty,
+  signatureUrl,
+  onSelectProfile,
+  onCreateEmpty,
+  onClone,
+  onSave,
+  onDelete,
+  onChangeSignature,
+}: Props) {
   const updateSender = (sender: Address) => onChange({ ...data, sender })
   const updateRecipient = (recipient: Address) => onChange({ ...data, recipient })
   const updateMeta = (meta: LetterMeta) => onChange({ ...data, meta })
@@ -54,6 +85,16 @@ export function EditorPanel({ data, onChange }: Props) {
     >
       <Fieldset legend="Absender">
         <Stack gap="sm">
+          <SenderProfileSelector
+            profiles={profiles}
+            activeId={activeId}
+            dirty={dirty}
+            onSelect={onSelectProfile}
+            onCreateEmpty={onCreateEmpty}
+            onClone={onClone}
+            onSave={onSave}
+            onDelete={onDelete}
+          />
           <AddressFields value={data.sender} onChange={updateSender} />
           <SimpleGrid cols={{ base: 1, sm: 2 }} spacing="sm">
             <TextInput
@@ -78,6 +119,14 @@ export function EditorPanel({ data, onChange }: Props) {
             value={data.senderContact.website}
             onChange={(e) => setContactField('website', e.currentTarget.value)}
           />
+          <TextInput
+            label="Unterschrift (Name)"
+            value={data.signatureName}
+            onChange={(e) =>
+              onChange({ ...data, signatureName: e.currentTarget.value })
+            }
+          />
+          <SignatureField url={signatureUrl} onChange={onChangeSignature} />
         </Stack>
       </Fieldset>
 
@@ -152,12 +201,6 @@ export function EditorPanel({ data, onChange }: Props) {
             required
             value={data.meta.closing}
             onChange={(e) => setMetaField('closing', e.currentTarget.value)}
-          />
-          <TextInput
-            label="Unterschrift (Name)"
-            required
-            value={data.meta.signature}
-            onChange={(e) => setMetaField('signature', e.currentTarget.value)}
           />
         </Stack>
       </Fieldset>

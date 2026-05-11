@@ -7,9 +7,17 @@ interface Props {
   totalPages: number
   bodyHtml: string
   showClosing: boolean
+  signatureUrl: string | null
 }
 
-export function LetterPage({ data, pageIndex, totalPages, bodyHtml, showClosing }: Props) {
+export function LetterPage({
+  data,
+  pageIndex,
+  totalPages,
+  bodyHtml,
+  showClosing,
+  signatureUrl,
+}: Props) {
   const isFirst = pageIndex === 0
   const showFooter = totalPages > 1
 
@@ -52,9 +60,17 @@ export function LetterPage({ data, pageIndex, totalPages, bodyHtml, showClosing 
             {data.meta.closing.trim() && (
               <p className="letter-page__closing">{data.meta.closing}</p>
             )}
-            <div className="letter-page__signature-space" aria-hidden="true" />
-            {data.meta.signature.trim() && (
-              <p className="letter-page__signature-name">{data.meta.signature}</p>
+            <div className="letter-page__signature-space" aria-hidden={!signatureUrl}>
+              {signatureUrl && (
+                <img
+                  className="letter-page__signature-image"
+                  src={signatureUrl}
+                  alt=""
+                />
+              )}
+            </div>
+            {data.signatureName.trim() && (
+              <p className="letter-page__signature-name">{data.signatureName}</p>
             )}
           </>
         )}

@@ -94,7 +94,6 @@ test.describe('Functionality', () => {
         'Betreff',
         'Anrede',
         'Grußformel',
-        'Unterschrift (Name)',
       ]),
     )
 
