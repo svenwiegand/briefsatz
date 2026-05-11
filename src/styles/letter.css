@@ -29,6 +29,10 @@
   /* Scaled to fit available preview width (set via --preview-scale on the
    * preview panel). Print output is forced back to 1:1 below. */
   zoom: var(--preview-scale, 1);
+  /* Prevent iOS Safari from auto-boosting font sizes within the scaled page,
+   * which would make smaller text (8pt, 10pt) appear proportionally too large. */
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
 }
 
 .letter-page:last-of-type {
