@@ -5,10 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="theme-color" content="#1f2937" />
-    <title>briefsatz.de – Briefe nach DIN 5008</title>
+    <title>briefsatz.de – Briefe für Fensterumschläge, direkt im Browser</title>
     <meta
       name="description"
-      content="Kostenloser Online-Editor für Geschäftsbriefe nach DIN 5008 Form B. Direkt im Browser, ohne Anmeldung, ohne Tracking."
+      content="Kostenlos einen Brief schreiben, der in Umschläge mit Adressfenster passt. Mit Live-Vorschau, direktem Druck und ohne Anmeldung – nach DIN 5008."
     />
     <link rel="preconnect" href="https://fonts.bunny.net" crossorigin />
     <link
@@ -19,22 +19,39 @@
       :root {
         color-scheme: light dark;
         --bg: #f4f5f7;
+        --bg-soft: #eceef2;
         --fg: #111827;
         --muted: #4b5563;
+        --muted-strong: #1f2937;
         --accent: #1d4ed8;
+        --accent-soft: rgba(29, 78, 216, 0.08);
         --accent-fg: #ffffff;
         --border: #d1d5db;
+        --border-soft: #e5e7eb;
         --surface: #ffffff;
+        --chrome-bg: #e4e6ea;
+        --chrome-border: #cbd0d8;
+        --shadow-soft: 0 30px 60px -20px rgba(15, 23, 42, 0.25),
+          0 12px 24px -12px rgba(15, 23, 42, 0.15);
       }
+
       @media (prefers-color-scheme: dark) {
         :root {
           --bg: #0f172a;
+          --bg-soft: #111c34;
           --fg: #f8fafc;
           --muted: #94a3b8;
+          --muted-strong: #cbd5e1;
           --accent: #60a5fa;
+          --accent-soft: rgba(96, 165, 250, 0.12);
           --accent-fg: #0b1120;
           --border: #334155;
+          --border-soft: #1e293b;
           --surface: #111827;
+          --chrome-bg: #1f2937;
+          --chrome-border: #0b1120;
+          --shadow-soft: 0 30px 60px -20px rgba(0, 0, 0, 0.6),
+            0 12px 24px -12px rgba(0, 0, 0, 0.4);
         }
       }
 
@@ -56,27 +73,37 @@
           'Segoe UI', Roboto, sans-serif;
         line-height: 1.55;
         min-height: 100vh;
-        display: grid;
-        place-items: center;
-        padding: 32px 20px;
+        padding: 64px 24px 96px;
       }
 
       main {
-        max-width: 36rem;
+        max-width: 72rem;
+        margin: 0 auto;
+      }
+
+      /* ---------- Hero ---------- */
+
+      .hero {
         text-align: center;
       }
 
-      h1 {
-        font-size: clamp(2.25rem, 5vw + 1rem, 3.5rem);
-        line-height: 1.1;
-        margin: 0 0 16px;
+      .hero h1 {
+        font-size: clamp(2.25rem, 5vw + 1rem, 3.75rem);
+        line-height: 1.05;
+        margin: 0 0 20px;
         letter-spacing: -0.02em;
       }
 
-      .lede {
-        font-size: 1.15rem;
+      .hero .lede {
+        font-size: clamp(1.05rem, 0.5vw + 0.95rem, 1.25rem);
         color: var(--muted);
-        margin: 0 0 32px;
+        max-width: 38rem;
+        margin: 0 auto 32px;
+      }
+
+      .hero .lede strong {
+        color: var(--muted-strong);
+        font-weight: 700;
       }
 
       .cta {
@@ -87,7 +114,7 @@
         background-color: var(--accent);
         color: var(--accent-fg);
         text-decoration: none;
-        font-weight: 600;
+        font-weight: 700;
         border-radius: 10px;
         transition: transform 120ms ease, box-shadow 120ms ease;
         box-shadow: 0 6px 18px rgba(29, 78, 216, 0.25);
@@ -99,73 +126,564 @@
         box-shadow: 0 10px 24px rgba(29, 78, 216, 0.3);
       }
 
-      .features {
-        margin-top: 64px;
-        text-align: left;
-        display: grid;
-        gap: 16px;
-      }
+      /* ---------- Mac window ---------- */
 
-      .features h2 {
-        font-size: 1.125rem;
-        font-weight: 600;
-        margin: 0 0 8px;
-        text-align: center;
-      }
-
-      .feature-list {
-        list-style: none;
-        padding: 0;
-        margin: 0;
-        display: grid;
-        gap: 8px;
-      }
-
-      .feature-list li {
-        padding: 12px 16px;
+      .mac-window {
+        margin: 64px auto 0;
+        max-width: 60rem;
+        border-radius: 14px;
+        overflow: hidden;
         background-color: var(--surface);
-        border: 1px solid var(--border);
-        border-radius: 8px;
+        border: 1px solid var(--chrome-border);
+        box-shadow: var(--shadow-soft);
       }
+
+      .mac-window__chrome {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 12px 16px;
+        background-color: var(--chrome-bg);
+        border-bottom: 1px solid var(--chrome-border);
+      }
+
+      .mac-window__dot {
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        box-shadow: inset 0 0 0 0.5px rgba(0, 0, 0, 0.1);
+      }
+
+      .mac-window__dot--red {
+        background-color: #ff5f57;
+      }
+
+      .mac-window__dot--yellow {
+        background-color: #febc2e;
+      }
+
+      .mac-window__dot--green {
+        background-color: #28c840;
+      }
+
+      .mac-window__shot {
+        display: block;
+        width: 100%;
+        height: auto;
+      }
+
+      .mac-window__shot--dark {
+        display: none;
+      }
+
+      @media (prefers-color-scheme: dark) {
+        .mac-window__shot--light {
+          display: none;
+        }
+        .mac-window__shot--dark {
+          display: block;
+        }
+      }
+
+      /* ---------- Features ---------- */
+
+      .features {
+        margin-top: 112px;
+      }
+
+      .features__heading {
+        text-align: center;
+        margin: 0 0 48px;
+      }
+
+      .features__heading h2 {
+        font-size: clamp(1.75rem, 2vw + 1rem, 2.25rem);
+        letter-spacing: -0.01em;
+        margin: 0 0 8px;
+      }
+
+      .features__heading p {
+        color: var(--muted);
+        margin: 0;
+      }
+
+      .features__grid {
+        display: grid;
+        grid-template-columns: minmax(0, 18rem) minmax(0, 1fr);
+        gap: 32px;
+        align-items: start;
+      }
+
+      .features__nav {
+        display: grid;
+        gap: 6px;
+      }
+
+      .features__tab {
+        appearance: none;
+        background: transparent;
+        border: 1px solid transparent;
+        border-left: 3px solid transparent;
+        border-radius: 10px;
+        padding: 14px 16px;
+        text-align: left;
+        cursor: pointer;
+        color: var(--muted);
+        font: inherit;
+        display: grid;
+        gap: 2px;
+        transition: background-color 120ms ease, color 120ms ease,
+          border-color 120ms ease;
+      }
+
+      .features__tab:hover {
+        background-color: var(--bg-soft);
+        color: var(--fg);
+      }
+
+      .features__tab:focus-visible {
+        outline: 2px solid var(--accent);
+        outline-offset: 2px;
+      }
+
+      .features__tab[aria-selected='true'] {
+        background-color: var(--accent-soft);
+        border-color: var(--accent-soft);
+        border-left-color: var(--accent);
+        color: var(--fg);
+      }
+
+      .features__tab-title {
+        font-weight: 700;
+        font-size: 1.05rem;
+      }
+
+      .features__tab-sub {
+        font-size: 0.9rem;
+        color: var(--muted);
+      }
+
+      .features__tab[aria-selected='true'] .features__tab-sub {
+        color: var(--muted-strong);
+      }
+
+      .features__panel {
+        position: relative;
+        background-color: var(--surface);
+        border: 1px solid var(--border-soft);
+        border-radius: 14px;
+        padding: 32px;
+        min-height: 22rem;
+        box-shadow: var(--shadow-soft);
+      }
+
+      .features__detail {
+        display: none;
+        animation: fade-in 200ms ease;
+      }
+
+      .features__detail[data-active='true'] {
+        display: block;
+      }
+
+      .features__detail h3 {
+        font-size: 1.5rem;
+        letter-spacing: -0.01em;
+        margin: 0 0 12px;
+      }
+
+      .features__detail p {
+        margin: 0 0 16px;
+        color: var(--muted-strong);
+        line-height: 1.6;
+      }
+
+      .features__detail ul {
+        margin: 0;
+        padding-left: 1.2em;
+        color: var(--muted-strong);
+        display: grid;
+        gap: 6px;
+      }
+
+      .features__detail li::marker {
+        color: var(--accent);
+      }
+
+      @keyframes fade-in {
+        from {
+          opacity: 0;
+          transform: translateY(4px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      /* ---------- Footer ---------- */
 
       footer {
-        margin-top: 64px;
-        font-size: 0.85rem;
+        margin-top: 112px;
+        font-size: 0.9rem;
         color: var(--muted);
+        text-align: center;
       }
 
       footer a {
         color: var(--muted);
       }
+
+      /* ---------- Responsive ---------- */
+
+      @media (max-width: 720px) {
+        body {
+          padding: 40px 16px 64px;
+        }
+
+        .mac-window {
+          margin-top: 48px;
+          border-radius: 10px;
+        }
+
+        .mac-window__chrome {
+          padding: 8px 12px;
+        }
+
+        .mac-window__dot {
+          width: 10px;
+          height: 10px;
+        }
+
+        .features {
+          margin-top: 80px;
+        }
+
+        .features__grid {
+          grid-template-columns: 1fr;
+          gap: 16px;
+        }
+
+        .features__nav {
+          gap: 4px;
+        }
+
+        .features__panel {
+          padding: 24px;
+          min-height: auto;
+        }
+      }
     </style>
   </head>
   <body>
     <main>
-      <h1>Briefe nach DIN 5008.<br />Direkt im Browser.</h1>
-      <p class="lede">
-        Geschäftsbriefe nach Form B in Sekunden – ohne Word-Vorlage, ohne
-        Anmeldung, ohne Tracking. Drucken oder als PDF speichern.
-      </p>
+      <section class="hero">
+        <h1>Briefe schreiben.<br />Direkt im Browser.</h1>
+        <p class="lede">
+          In Sekunden einen Brief verfassen, der in
+          <strong>Umschläge mit Adressfenster</strong> passt – mit Live-Vorschau
+          und direktem Druck. Keine Anmeldung, sofort loslegen. Nach DIN 5008.
+        </p>
+        <a class="cta" href="/app/">Jetzt Brief schreiben →</a>
 
-      <a class="cta" href="/app/">Jetzt Brief schreiben →</a>
+        <div class="mac-window" aria-hidden="true">
+          <div class="mac-window__chrome">
+            <span class="mac-window__dot mac-window__dot--red"></span>
+            <span class="mac-window__dot mac-window__dot--yellow"></span>
+            <span class="mac-window__dot mac-window__dot--green"></span>
+          </div>
+          <img
+            class="mac-window__shot mac-window__shot--light"
+            src="/app-screenshot-light.png"
+            alt="briefsatz.de in Aktion: links Eingabefelder für Absender und Empfänger, rechts die Live-Vorschau des fertigen Briefs."
+            width="1440"
+            height="900"
+          />
+          <img
+            class="mac-window__shot mac-window__shot--dark"
+            src="/app-screenshot-dark.png"
+            alt=""
+            width="1440"
+            height="900"
+          />
+        </div>
+      </section>
 
       <section class="features">
-        <h2>Was die App kann</h2>
-        <ul class="feature-list">
-          <li>DIN-5008-konformes Anschriftenfeld, Falt- und Lochmarken</li>
-          <li>
-            Live-Vorschau in Originalmaßen, automatische Verteilung auf mehrere
-            Seiten
-          </li>
-          <li>
-            Rich-Text-Editor mit Listen, Check-Listen, Aufzählungen und
-            Silbentrennung
-          </li>
-          <li>Barrierefrei und responsiv – funktioniert auf jedem Gerät</li>
-          <li>
-            Läuft komplett lokal im Browser, keine Daten verlassen Ihren Rechner
-          </li>
-        </ul>
+        <div class="features__heading">
+          <h2>Was die App kann</h2>
+          <p>Wähle ein Feature aus, um Details zu sehen.</p>
+        </div>
+
+        <div class="features__grid">
+          <nav class="features__nav" role="tablist" aria-label="Features">
+            <button
+              type="button"
+              role="tab"
+              id="tab-editor"
+              aria-controls="panel-editor"
+              aria-selected="true"
+              class="features__tab"
+              data-feature="editor"
+            >
+              <span class="features__tab-title">Mächtiger Texteditor</span>
+              <span class="features__tab-sub"
+                >Listen, Tabellen, Zwischenüberschriften</span
+              >
+            </button>
+            <button
+              type="button"
+              role="tab"
+              id="tab-preview"
+              aria-controls="panel-preview"
+              aria-selected="false"
+              class="features__tab"
+              data-feature="preview"
+            >
+              <span class="features__tab-title">Live-Vorschau</span>
+              <span class="features__tab-sub"
+                >Originalmaße, mehrseitig, immer aktuell</span
+              >
+            </button>
+            <button
+              type="button"
+              role="tab"
+              id="tab-din"
+              aria-controls="panel-din"
+              aria-selected="false"
+              class="features__tab"
+              data-feature="din"
+            >
+              <span class="features__tab-title">Passt ins Fensterkuvert</span>
+              <span class="features__tab-sub"
+                >DIN 5008, Falt- und Lochmarken</span
+              >
+            </button>
+            <button
+              type="button"
+              role="tab"
+              id="tab-print"
+              aria-controls="panel-print"
+              aria-selected="false"
+              class="features__tab"
+              data-feature="print"
+            >
+              <span class="features__tab-title">Drucken oder als PDF</span>
+              <span class="features__tab-sub"
+                >Direkt aus dem Browser, ohne Umwege</span
+              >
+            </button>
+            <button
+              type="button"
+              role="tab"
+              id="tab-local"
+              aria-controls="panel-local"
+              aria-selected="false"
+              class="features__tab"
+              data-feature="local"
+            >
+              <span class="features__tab-title">Sofort loslegen</span>
+              <span class="features__tab-sub"
+                >Keine Anmeldung, läuft lokal im Browser</span
+              >
+            </button>
+            <button
+              type="button"
+              role="tab"
+              id="tab-a11y"
+              aria-controls="panel-a11y"
+              aria-selected="false"
+              class="features__tab"
+              data-feature="a11y"
+            >
+              <span class="features__tab-title">Barrierefrei & responsiv</span>
+              <span class="features__tab-sub"
+                >Funktioniert auf jedem Gerät</span
+              >
+            </button>
+          </nav>
+
+          <div class="features__panel">
+            <article
+              class="features__detail"
+              role="tabpanel"
+              id="panel-editor"
+              aria-labelledby="tab-editor"
+              data-feature="editor"
+              data-active="true"
+            >
+              <h3>Schreiben wie in einer Textverarbeitung</h3>
+              <p>
+                Der eingebaute Editor unterstützt alles, was ein Brief braucht –
+                und nichts, was nur ablenkt.
+              </p>
+              <ul>
+                <li>
+                  <strong>Formatierung:</strong> fett, kursiv, unterstrichen
+                </li>
+                <li>
+                  <strong>Struktur:</strong> Zwischenüberschriften und Absätze
+                </li>
+                <li>
+                  <strong>Aufzählungen:</strong> Listen mit Punkten, Nummern und
+                  Häkchen
+                </li>
+                <li>
+                  <strong>Tabellen</strong> für tabellarische Inhalte
+                </li>
+                <li>
+                  Automatische <strong>Silbentrennung</strong> für sauberen
+                  Blocksatz
+                </li>
+              </ul>
+            </article>
+
+            <article
+              class="features__detail"
+              role="tabpanel"
+              id="panel-preview"
+              aria-labelledby="tab-preview"
+              data-feature="preview"
+              data-active="false"
+            >
+              <h3>Live-Vorschau in Originalmaßen</h3>
+              <p>
+                Während du tippst, siehst du auf der rechten Seite, wie der
+                fertige Brief aussehen wird – Zeile für Zeile, in echter
+                DIN-A4-Größe.
+              </p>
+              <ul>
+                <li>
+                  Automatische Verteilung auf <strong>mehrere Seiten</strong>,
+                  wenn der Inhalt länger wird
+                </li>
+                <li>
+                  Anschriftenfeld, Datum, Betreff und Grußformel werden
+                  automatisch korrekt positioniert
+                </li>
+                <li>
+                  Keine Überraschungen beim Drucken: was du siehst, kommt aus
+                  dem Drucker
+                </li>
+              </ul>
+            </article>
+
+            <article
+              class="features__detail"
+              role="tabpanel"
+              id="panel-din"
+              aria-labelledby="tab-din"
+              data-feature="din"
+              data-active="false"
+            >
+              <h3>Passt garantiert ins Fensterkuvert</h3>
+              <p>
+                Die Adresse landet genau dort, wo das Sichtfenster eines
+                handelsüblichen Briefumschlags ist – ganz ohne Messen oder
+                Ausprobieren.
+              </p>
+              <ul>
+                <li>
+                  Anschriftenfeld nach <strong>DIN 5008 Form B</strong>
+                </li>
+                <li>
+                  <strong>Falt- und Lochmarken</strong> für sauberes
+                  Zusammenlegen
+                </li>
+                <li>
+                  Passende Ränder, Schriftgrößen und Abstände – Standardumschlag
+                  C6/5, C5 oder lang DL
+                </li>
+              </ul>
+            </article>
+
+            <article
+              class="features__detail"
+              role="tabpanel"
+              id="panel-print"
+              aria-labelledby="tab-print"
+              data-feature="print"
+              data-active="false"
+            >
+              <h3>Drucken oder als PDF speichern</h3>
+              <p>
+                Ein Klick auf <em>Drucken</em> öffnet den Druckdialog deines
+                Browsers. Von dort druckst du direkt – oder speicherst eine PDF
+                zum Versenden per E-Mail.
+              </p>
+              <ul>
+                <li>
+                  Funktioniert mit jedem Drucker, den dein Betriebssystem kennt
+                </li>
+                <li>
+                  PDF-Export ohne Zusatzsoftware – einfach „Als PDF speichern"
+                  im Druckdialog
+                </li>
+                <li>
+                  Druckansicht ist <strong>pixelgenau identisch</strong> zur
+                  Live-Vorschau
+                </li>
+              </ul>
+            </article>
+
+            <article
+              class="features__detail"
+              role="tabpanel"
+              id="panel-local"
+              aria-labelledby="tab-local"
+              data-feature="local"
+              data-active="false"
+            >
+              <h3>Keine Anmeldung. Sofort loslegen.</h3>
+              <p>
+                Du öffnest die Seite und schreibst. Mehr ist nicht nötig.
+              </p>
+              <ul>
+                <li>
+                  <strong>Keine Registrierung</strong>, kein Konto, kein
+                  Newsletter
+                </li>
+                <li>
+                  Der Brief läuft <strong>komplett lokal</strong> in deinem
+                  Browser – keine Daten verlassen deinen Rechner
+                </li>
+                <li>
+                  Inhalte bleiben auf deinem Gerät erhalten, auch nach dem
+                  Schließen des Browsers
+                </li>
+              </ul>
+            </article>
+
+            <article
+              class="features__detail"
+              role="tabpanel"
+              id="panel-a11y"
+              aria-labelledby="tab-a11y"
+              data-feature="a11y"
+              data-active="false"
+            >
+              <h3>Barrierefrei und responsiv</h3>
+              <p>
+                briefsatz.de ist von Grund auf so gebaut, dass es für möglichst
+                viele Menschen und auf möglichst vielen Geräten gut
+                funktioniert.
+              </p>
+              <ul>
+                <li>
+                  Bedienung per Tastatur und Screenreader
+                </li>
+                <li>
+                  Schriftart <strong>Atkinson Hyperlegible</strong>, optimiert
+                  für gute Lesbarkeit
+                </li>
+                <li>
+                  Funktioniert auf Desktop, Tablet und Smartphone – Hell- und
+                  Dunkelmodus inklusive
+                </li>
+              </ul>
+            </article>
+          </div>
+        </div>
       </section>
 
       <footer>
@@ -173,5 +691,60 @@
         <a href="/app/">Zur App</a>
       </footer>
     </main>
+
+    <script>
+      ;(function () {
+        const tabs = document.querySelectorAll('.features__tab')
+        const panels = document.querySelectorAll('.features__detail')
+
+        function activate(feature) {
+          tabs.forEach((tab) => {
+            const selected = tab.dataset.feature === feature
+            tab.setAttribute('aria-selected', selected ? 'true' : 'false')
+          })
+          panels.forEach((panel) => {
+            panel.dataset.active =
+              panel.dataset.feature === feature ? 'true' : 'false'
+          })
+        }
+
+        tabs.forEach((tab) => {
+          tab.addEventListener('click', () => activate(tab.dataset.feature))
+          tab.addEventListener('mouseenter', () =>
+            activate(tab.dataset.feature),
+          )
+          tab.addEventListener('focus', () => activate(tab.dataset.feature))
+        })
+
+        // Keyboard navigation: arrow keys to move between tabs.
+        const nav = document.querySelector('.features__nav')
+        if (nav) {
+          nav.addEventListener('keydown', (event) => {
+            if (
+              event.key !== 'ArrowDown' &&
+              event.key !== 'ArrowUp' &&
+              event.key !== 'Home' &&
+              event.key !== 'End'
+            ) {
+              return
+            }
+            event.preventDefault()
+            const list = Array.from(tabs)
+            const current = list.indexOf(document.activeElement)
+            let next = current
+            if (event.key === 'ArrowDown') {
+              next = (current + 1) % list.length
+            } else if (event.key === 'ArrowUp') {
+              next = (current - 1 + list.length) % list.length
+            } else if (event.key === 'Home') {
+              next = 0
+            } else if (event.key === 'End') {
+              next = list.length - 1
+            }
+            list[next].focus()
+          })
+        }
+      })()
+    </script>
   </body>
 </html>
