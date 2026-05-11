@@ -1,0 +1,165 @@
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="theme-color" content="#1f2937" />
+    <title>Impressum – briefsatz.de</title>
+    <meta name="description" content="Impressum nach §5 DDG für briefsatz.de." />
+    <meta name="robots" content="noindex" />
+    <link rel="preconnect" href="https://fonts.bunny.net" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.bunny.net/css?family=atkinson-hyperlegible:400,400i,700,700i&display=swap"
+    />
+    <style>
+      :root {
+        color-scheme: light dark;
+        --bg: #f4f5f7;
+        --fg: #111827;
+        --muted: #4b5563;
+        --accent: #1d4ed8;
+        --border-soft: #e5e7eb;
+      }
+      @media (prefers-color-scheme: dark) {
+        :root {
+          --bg: #0f172a;
+          --fg: #f8fafc;
+          --muted: #94a3b8;
+          --accent: #60a5fa;
+          --border-soft: #1e293b;
+        }
+      }
+
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+      }
+
+      html,
+      body {
+        margin: 0;
+      }
+
+      body {
+        background-color: var(--bg);
+        color: var(--fg);
+        font-family: 'Atkinson Hyperlegible', system-ui, -apple-system,
+          'Segoe UI', Roboto, sans-serif;
+        line-height: 1.6;
+        min-height: 100vh;
+        padding: 48px 24px 96px;
+      }
+
+      main {
+        max-width: 36rem;
+        margin: 0 auto;
+      }
+
+      h1 {
+        font-size: clamp(1.75rem, 2vw + 1rem, 2.25rem);
+        letter-spacing: -0.01em;
+        margin: 0 0 32px;
+      }
+
+      h2 {
+        font-size: 1.1rem;
+        margin: 32px 0 8px;
+      }
+
+      p {
+        margin: 0 0 12px;
+      }
+
+      address {
+        font-style: normal;
+        margin: 0 0 12px;
+      }
+
+      a {
+        color: var(--accent);
+      }
+
+      .back {
+        display: inline-block;
+        margin-bottom: 32px;
+        color: var(--muted);
+        text-decoration: none;
+        font-size: 0.95rem;
+      }
+
+      .back:hover {
+        color: var(--fg);
+      }
+
+      footer {
+        margin-top: 64px;
+        padding-top: 24px;
+        border-top: 1px solid var(--border-soft);
+        font-size: 0.85rem;
+        color: var(--muted);
+      }
+
+      footer a {
+        color: var(--muted);
+        text-decoration: none;
+      }
+
+      footer a:hover,
+      footer a:focus-visible {
+        color: var(--fg);
+        text-decoration: underline;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <a class="back" href="/">← zurück zur Startseite</a>
+      <h1>Impressum</h1>
+
+      <p>Angaben gemäß §5 DDG (Digitale-Dienste-Gesetz)</p>
+
+      <address>
+        Sven Wiegand<br />
+        Im Grund 22<br />
+        13591 Berlin<br />
+        Deutschland
+      </address>
+
+      <h2>Kontakt</h2>
+      <p>
+        E-Mail:
+        <a href="mailto:sven@briefsatz.de">sven@briefsatz.de</a>
+      </p>
+
+      <h2>Haftung für Inhalte</h2>
+      <p>
+        Die Inhalte dieser Seiten wurden mit größtmöglicher Sorgfalt erstellt.
+        Für die Richtigkeit, Vollständigkeit und Aktualität der Inhalte kann
+        jedoch keine Gewähr übernommen werden.
+      </p>
+
+      <h2>Haftung für Links</h2>
+      <p>
+        Diese Seite enthält Links zu externen Websites Dritter, auf deren
+        Inhalte ich keinen Einfluss habe. Für die Inhalte der verlinkten
+        Seiten ist stets der jeweilige Anbieter verantwortlich.
+      </p>
+
+      <h2>Urheberrecht</h2>
+      <p>
+        Der Quellcode der briefsatz.de-Anwendung ist Open Source und unter den
+        Bedingungen der jeweiligen Lizenz im
+        <a href="https://github.com/svenwiegand/briefsatz">Repository</a>
+        einsehbar.
+      </p>
+
+      <footer>
+        <a href="/">briefsatz.de</a> ·
+        <a href="/datenschutz.html">Datenschutz</a>
+      </footer>
+    </main>
+  </body>
+</html>
