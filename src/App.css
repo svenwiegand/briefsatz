@@ -104,6 +104,15 @@
   line-height: 1.4;
 }
 
+/* Match heading sizes to the letter preview (h1=14pt, h2=12.5pt, h3=11.5pt at 11pt base).
+ * BlockNote drives font-size via --level and --prev-level CSS variables. */
+.body-editor [data-content-type="heading"]            { --level: 1.27em; padding-top: 8px; }
+.body-editor [data-content-type="heading"][data-level="2"] { --level: 1.14em; }
+.body-editor [data-content-type="heading"][data-level="3"] { --level: 1.05em; }
+.body-editor [data-prev-level="1"] { --prev-level: 1.27em; }
+.body-editor [data-prev-level="2"] { --prev-level: 1.14em; }
+.body-editor [data-prev-level="3"] { --prev-level: 1.05em; }
+
 /* Inline <code> – the editor's default styling falls back to the OS serif
  * monospace and drops the chip background; align with the preview. */
 .body-editor .bn-editor code {
