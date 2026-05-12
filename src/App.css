@@ -5,7 +5,7 @@
 .app__main {
   display: grid;
   grid-template-columns: var(--editor-width, 42%) 6px minmax(0, 1fr);
-  height: calc(100vh - 64px);
+  height: 100vh;
   min-height: 0;
 }
 
