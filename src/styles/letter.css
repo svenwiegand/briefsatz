@@ -260,8 +260,8 @@
 }
 
 .letter-page__body-content li > input[type="checkbox"]:checked {
-  background-color: #1d4ed8;
-  border-color: #1d4ed8;
+  background-color: #0284c7;
+  border-color: #0284c7;
 }
 
 .letter-page__body-content li > input[type="checkbox"]:checked::after {
@@ -327,7 +327,7 @@
 }
 
 .letter-page__body-content a {
-  color: #1d4ed8;
+  color: #0284c7;
   text-decoration: underline;
 }
 

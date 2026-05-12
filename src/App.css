@@ -53,11 +53,11 @@
 
 .splitter:hover,
 .splitter:focus-visible {
-  background-color: var(--mantine-primary-color-filled, #1d4ed8);
+  background-color: var(--mantine-primary-color-filled, #0284c7);
 }
 
 .splitter:focus-visible {
-  outline: 2px solid var(--mantine-primary-color-filled, #1d4ed8);
+  outline: 2px solid var(--mantine-primary-color-filled, #0284c7);
   outline-offset: 2px;
 }
 

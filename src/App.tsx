@@ -359,19 +359,28 @@ export default function App() {
     <AppShell header={{ height: 64 }} padding={0} className="app">
       <AppShell.Header>
         <Group h="100%" px="lg" justify="space-between" wrap="nowrap">
-          <Title
-            order={1}
-            fz={24}
-            fw={700}
-            lh={1}
-            ff='"Atkinson Hyperlegible", system-ui, sans-serif'
-            style={{ letterSpacing: '-0.01em' }}
-          >
-            briefsatz
-            <Text component="span" inherit fw={400} c="dimmed">
-              .de
-            </Text>
-          </Title>
+          <Group gap="xs" wrap="nowrap" align="center">
+            <img
+              src="/favicon.svg"
+              alt=""
+              width={28}
+              height={32}
+              style={{ display: 'block' }}
+            />
+            <Title
+              order={1}
+              fz={24}
+              fw={700}
+              lh={1}
+              ff='"Atkinson Hyperlegible", system-ui, sans-serif'
+              style={{ letterSpacing: '-0.01em' }}
+            >
+              briefsatz
+              <Text component="span" inherit fw={400} c="dimmed">
+                .de
+              </Text>
+            </Title>
+          </Group>
           <Button
             onClick={handlePrint}
             aria-label="Brief drucken oder als PDF speichern"

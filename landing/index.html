@@ -57,8 +57,10 @@
         --fg: #111827;
         --muted: #4b5563;
         --muted-strong: #1f2937;
-        --accent: #1d4ed8;
-        --accent-soft: rgba(29, 78, 216, 0.08);
+        --accent: #0284c7;
+        --accent-hover: #0369a1;
+        --accent-bright: #06b6d4;
+        --accent-soft: rgba(2, 132, 199, 0.1);
         --accent-fg: #ffffff;
         --border: #d1d5db;
         --border-soft: #e5e7eb;
@@ -76,9 +78,11 @@
           --fg: #f8fafc;
           --muted: #94a3b8;
           --muted-strong: #cbd5e1;
-          --accent: #60a5fa;
-          --accent-soft: rgba(96, 165, 250, 0.12);
-          --accent-fg: #0b1120;
+          --accent: #38bdf8;
+          --accent-hover: #7dd3fc;
+          --accent-bright: #22d3ee;
+          --accent-soft: rgba(56, 189, 248, 0.14);
+          --accent-fg: #082f49;
           --border: #334155;
           --border-soft: #1e293b;
           --surface: #111827;
@@ -121,11 +125,39 @@
         text-align: center;
       }
 
+      .hero__logo {
+        display: block;
+        width: auto;
+        height: 72px;
+        margin: 0 auto 24px;
+      }
+
       .hero h1 {
         font-size: clamp(2.25rem, 5vw + 1rem, 3.75rem);
         line-height: 1.05;
         margin: 0 0 20px;
         letter-spacing: -0.02em;
+      }
+
+      .brand-gradient {
+        color: var(--accent);
+      }
+
+      @supports (
+        (background-clip: text) or (-webkit-background-clip: text)
+      ) {
+        .brand-gradient {
+          background-image: linear-gradient(
+            90deg,
+            #0a74ff 0%,
+            #00b5ee 50%,
+            #05dcc0 100%
+          );
+          -webkit-background-clip: text;
+          background-clip: text;
+          -webkit-text-fill-color: transparent;
+          color: transparent;
+        }
       }
 
       .hero .lede {
@@ -150,14 +182,16 @@
         text-decoration: none;
         font-weight: 700;
         border-radius: 10px;
-        transition: transform 120ms ease, box-shadow 120ms ease;
-        box-shadow: 0 6px 18px rgba(29, 78, 216, 0.25);
+        transition: transform 120ms ease, box-shadow 120ms ease,
+          background-color 120ms ease;
+        box-shadow: 0 6px 18px rgba(2, 132, 199, 0.25);
       }
 
       .cta:hover,
       .cta:focus-visible {
         transform: translateY(-1px);
-        box-shadow: 0 10px 24px rgba(29, 78, 216, 0.3);
+        background-color: var(--accent-hover);
+        box-shadow: 0 10px 24px rgba(2, 132, 199, 0.3);
       }
 
       /* ---------- Mac window ---------- */
@@ -367,7 +401,7 @@
       }
 
       .features__detail li::marker {
-        color: var(--accent);
+        color: var(--accent-bright);
       }
 
       @keyframes fade-in {
@@ -431,6 +465,11 @@
           padding: 40px 16px 64px;
         }
 
+        .hero__logo {
+          height: 56px;
+          margin-bottom: 18px;
+        }
+
         .mac-window {
           margin-top: 48px;
           border-radius: 10px;
@@ -468,7 +507,17 @@
   <body>
     <main>
       <section class="hero">
-        <h1>Briefe einfach schreiben.<br />Direkt im Browser.</h1>
+        <img
+          class="hero__logo"
+          src="/favicon.svg"
+          alt="briefsatz.de Logo"
+          width="55"
+          height="64"
+        />
+        <h1>
+          Briefe <span class="brand-gradient">einfach</span> schreiben.<br />Direkt
+          im Browser.
+        </h1>
         <p class="lede">
           Briefe für <strong>Fensterumschläge</strong> — mit Live-Vorschau und eingebetteter Unterschrift.
           <strong>Kostenlos</strong>, ohne Anmeldung und ohne Werbung.

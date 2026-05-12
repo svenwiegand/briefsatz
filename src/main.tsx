@@ -1,6 +1,10 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
-import { MantineProvider, createTheme } from '@mantine/core'
+import {
+  MantineProvider,
+  createTheme,
+  type MantineColorsTuple,
+} from '@mantine/core'
 import { DatesProvider } from '@mantine/dates'
 import dayjs from 'dayjs'
 import 'dayjs/locale/de'
@@ -13,8 +17,23 @@ import App from './App.tsx'
 
 dayjs.locale('de')
 
+const sky: MantineColorsTuple = [
+  '#f0f9ff',
+  '#e0f2fe',
+  '#bae6fd',
+  '#7dd3fc',
+  '#38bdf8',
+  '#0ea5e9',
+  '#0284c7',
+  '#0369a1',
+  '#075985',
+  '#0c4a6e',
+]
+
 const theme = createTheme({
-  primaryColor: 'blue',
+  primaryColor: 'sky',
+  primaryShade: { light: 6, dark: 4 },
+  colors: { sky },
   defaultRadius: 'md',
   fontFamily:
     'system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
