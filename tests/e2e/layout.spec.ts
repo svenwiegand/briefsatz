@@ -278,7 +278,7 @@ test.describe('Body styling', () => {
     const checkboxBg = await checked
       .locator('input[type="checkbox"]')
       .evaluate((el) => getComputedStyle(el).backgroundColor)
-    expect(checkboxBg).toBe('rgb(29, 78, 216)')
+    expect(checkboxBg).toBe('rgb(2, 132, 199)')
   })
 })
 
