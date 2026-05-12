@@ -408,11 +408,12 @@
   <body>
     <main>
       <section class="hero">
-        <h1>Briefe schreiben.<br />Direkt im Browser.</h1>
+        <h1>Briefe einfach schreiben.<br />Direkt im Browser.</h1>
         <p class="lede">
-          In Sekunden einen Brief verfassen, der in
-          <strong>Umschläge mit Adressfenster</strong> passt – mit Live-Vorschau
-          und direktem Druck. Keine Anmeldung, sofort loslegen. Nach DIN 5008.
+          Blitzschnell Briefe für <strong>Umschläge mit Adressfenster</strong> verfassen.
+          Mit <strong>Unterschrifteinbettung</strong>, <strong>Live-Vorschau</strong> und Druck.
+          Sofort loslegen <strong>ohne Anmeldung</strong>.
+          <strong>Kostenlos</strong>, keine Werbung und kein Tracking.
         </p>
         <a class="cta" href="/app/">Jetzt Brief schreiben →</a>
 
@@ -441,8 +442,7 @@
 
       <section class="features">
         <div class="features__heading">
-          <h2>Was die App kann</h2>
-          <p>Wähle ein Feature aus, um Details zu sehen.</p>
+          <h2>Das bietet dir briefsatz.de</h2>
         </div>
 
         <div class="features__grid">
@@ -459,6 +459,20 @@
               <span class="features__tab-title">Mächtiger Texteditor</span>
               <span class="features__tab-sub"
                 >Listen, Tabellen, Zwischenüberschriften</span
+              >
+            </button>
+            <button
+              type="button"
+              role="tab"
+              id="tab-senders"
+              aria-controls="panel-senders"
+              aria-selected="false"
+              class="features__tab"
+              data-feature="senders"
+            >
+              <span class="features__tab-title">Absenderprofile</span>
+              <span class="features__tab-sub"
+                >Verschiedene Absender mit Unterschrifteinbettung</span
               >
             </button>
             <button
@@ -512,9 +526,9 @@
               class="features__tab"
               data-feature="local"
             >
-              <span class="features__tab-title">Sofort loslegen</span>
+              <span class="features__tab-title">Lokale Datenspeicherung</span>
               <span class="features__tab-sub"
-                >Keine Anmeldung, läuft lokal im Browser</span
+                >Deine Daten auf deinem Gerät</span
               >
             </button>
             <button
@@ -526,9 +540,9 @@
               class="features__tab"
               data-feature="a11y"
             >
-              <span class="features__tab-title">Barrierefrei & responsiv</span>
+              <span class="features__tab-title">Kostenlos & Werbefrei</span>
               <span class="features__tab-sub"
-                >Funktioniert auf jedem Gerät</span
+                >Keine Kosten, keine Werbung, kein Tracking</span
               >
             </button>
           </nav>
@@ -564,6 +578,36 @@
                 <li>
                   Automatische <strong>Silbentrennung</strong> für sauberen
                   Blocksatz
+                </li>
+              </ul>
+            </article>
+
+            <article
+              class="features__detail"
+              role="tabpanel"
+              id="panel-senders"
+              aria-labelledby="tab-senders"
+              data-feature="senders"
+              data-active="false"
+            >
+              <h3>Mehrere Absenderprofile mit Unterschrift</h3>
+              <p>
+                Lege beliebig viele Absenderprofile an – privat, geschäftlich
+                oder für den Verein – und wähle beim Schreiben einfach das
+                passende aus.
+              </p>
+              <ul>
+                <li>
+                  <strong>Beliebig viele Profile</strong> mit Name, Anschrift
+                  und Kontaktdaten
+                </li>
+                <li>
+                  <strong>Unterschrift einbetten:</strong> Bild der eigenen
+                  Unterschrift hochladen und automatisch unter dem Brief
+                  einfügen
+                </li>
+                <li>
+                  Profil pro Brief wechseln – ohne erneutes Eintippen
                 </li>
               </ul>
             </article>
@@ -650,7 +694,7 @@
                   im Druckdialog
                 </li>
                 <li>
-                  Druckansicht ist <strong>pixelgenau identisch</strong> zur
+                  Druckansicht ist <strong>millimetergenau identisch</strong> zur
                   Live-Vorschau
                 </li>
               </ul>
@@ -664,18 +708,17 @@
               data-feature="local"
               data-active="false"
             >
-              <h3>Keine Anmeldung. Sofort loslegen.</h3>
+              <h3>Lokale Datenspeicherung</h3>
               <p>
-                Du öffnest die Seite und schreibst. Mehr ist nicht nötig.
+                Deine Daten bleiben auf deinem Gerät. Keine Anmeldung, keine Cloud, keine Gefahr, dass deine Daten in falsche Hände geraten.
               </p>
               <ul>
                 <li>
-                  <strong>Keine Registrierung</strong>, kein Konto, kein
-                  Newsletter
+                  briefsatz.de läuft <strong>komplett lokal</strong> in deinem
+                  Browser – keine Daten verlassen deinen Rechner
                 </li>
                 <li>
-                  Der Brief läuft <strong>komplett lokal</strong> in deinem
-                  Browser – keine Daten verlassen deinen Rechner
+                  <strong>Keine Registrierung</strong>, kein Konto, keine Gefahr für deine Daten
                 </li>
                 <li>
                   Inhalte bleiben auf deinem Gerät erhalten, auch nach dem
@@ -692,23 +735,20 @@
               data-feature="a11y"
               data-active="false"
             >
-              <h3>Barrierefrei und responsiv</h3>
+              <h3>Kostenlos & Werbefrei</h3>
               <p>
-                briefsatz.de ist von Grund auf so gebaut, dass es für möglichst
-                viele Menschen und auf möglichst vielen Geräten gut
-                funktioniert.
+                Da briefsatz.de komplett in deinem Browser läuft, 
+                fallen keine Server-Kosten an und du kannst es kostenlos nutzen.
               </p>
               <ul>
                 <li>
-                  Bedienung per Tastatur und Screenreader
+                  Vollständig kostenlos
                 </li>
                 <li>
-                  Schriftart <strong>Atkinson Hyperlegible</strong>, optimiert
-                  für gute Lesbarkeit
+                  Keine Werbung
                 </li>
                 <li>
-                  Funktioniert auf Desktop, Tablet und Smartphone – Hell- und
-                  Dunkelmodus inklusive
+                  Kein Tracking
                 </li>
               </ul>
             </article>
