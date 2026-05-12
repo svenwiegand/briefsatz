@@ -24,6 +24,7 @@ interface Props {
   profiles: SenderProfile[]
   activeId: string | null
   dirty: boolean
+  collapsed: boolean
   onSelect: (id: string) => void
   onCreateEmpty: () => void
   onClone: () => void
@@ -42,6 +43,7 @@ export function SenderProfileSelector({
   profiles,
   activeId,
   dirty,
+  collapsed,
   onSelect,
   onCreateEmpty,
   onClone,
@@ -142,54 +144,60 @@ export function SenderProfileSelector({
           </Combobox.Dropdown>
         </Combobox>
 
-        <Tooltip label="Neuer leerer Absender">
-          <ActionIcon
-            variant="default"
-            size="lg"
-            aria-label="Neuer Absender"
-            onClick={() => requestAction({ type: 'create' })}
-          >
-            <IconPlus size={18} />
-          </ActionIcon>
-        </Tooltip>
+        {!collapsed && (
+          <>
+            <Tooltip label="Neuer leerer Absender">
+              <ActionIcon
+                variant="default"
+                size="lg"
+                aria-label="Neuer Absender"
+                onClick={() => requestAction({ type: 'create' })}
+              >
+                <IconPlus size={18} />
+              </ActionIcon>
+            </Tooltip>
 
-        <Tooltip
-          label={
-            active ? 'Aktuelle Werte als neues Profil speichern' : 'Erst Profil auswählen'
-          }
-        >
-          <ActionIcon
-            variant="default"
-            size="lg"
-            aria-label="Absender duplizieren"
-            disabled={!active}
-            onClick={() => requestAction({ type: 'clone' })}
-          >
-            <IconCopy size={18} />
-          </ActionIcon>
-        </Tooltip>
+            <Tooltip
+              label={
+                active
+                  ? 'Aktuelle Werte als neues Profil speichern'
+                  : 'Erst Profil auswählen'
+              }
+            >
+              <ActionIcon
+                variant="default"
+                size="lg"
+                aria-label="Absender duplizieren"
+                disabled={!active}
+                onClick={() => requestAction({ type: 'clone' })}
+              >
+                <IconCopy size={18} />
+              </ActionIcon>
+            </Tooltip>
 
-        <Tooltip label={active ? 'Profil löschen' : 'Erst Profil auswählen'}>
-          <ActionIcon
-            variant="default"
-            color="red"
-            size="lg"
-            aria-label="Profil löschen"
-            disabled={!active}
-            onClick={() => requestAction({ type: 'delete' })}
-          >
-            <IconTrash size={18} />
-          </ActionIcon>
-        </Tooltip>
+            <Tooltip label={active ? 'Profil löschen' : 'Erst Profil auswählen'}>
+              <ActionIcon
+                variant="default"
+                color="red"
+                size="lg"
+                aria-label="Profil löschen"
+                disabled={!active}
+                onClick={() => requestAction({ type: 'delete' })}
+              >
+                <IconTrash size={18} />
+              </ActionIcon>
+            </Tooltip>
 
-        {active && dirty && (
-          <Button
-            leftSection={<IconDeviceFloppy size={18} />}
-            onClick={onSave}
-            variant="filled"
-          >
-            Speichern
-          </Button>
+            {active && dirty && (
+              <Button
+                leftSection={<IconDeviceFloppy size={18} />}
+                onClick={onSave}
+                variant="filled"
+              >
+                Speichern
+              </Button>
+            )}
+          </>
         )}
       </Group>
 

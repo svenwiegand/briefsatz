@@ -1,13 +1,18 @@
 import { useCallback } from 'react'
 import {
+  Collapse,
   Fieldset,
   SimpleGrid,
   Stack,
   Switch,
   Text,
   TextInput,
+  Tooltip,
+  UnstyledButton,
 } from '@mantine/core'
+import { useLocalStorage } from '@mantine/hooks'
 import { DateInput } from '@mantine/dates'
+import { IconChevronDown } from '@tabler/icons-react'
 import dayjs from 'dayjs'
 import customParseFormat from 'dayjs/plugin/customParseFormat'
 import { AddressFields } from './AddressFields'
@@ -21,6 +26,9 @@ import type {
   SenderContact,
   SenderProfile,
 } from '../types'
+
+const SENDER_COLLAPSED_KEY = 'letter-app:sender-block-collapsed'
+const SENDER_BODY_ID = 'sender-block-body'
 
 dayjs.extend(customParseFormat)
 
@@ -82,6 +90,55 @@ export function EditorPanel({
     value: SenderContact[K],
   ) => updateSenderContact({ ...data.senderContact, [key]: value })
 
+  const [senderCollapsed, setSenderCollapsed] = useLocalStorage<boolean>({
+    key: SENDER_COLLAPSED_KEY,
+    defaultValue: false,
+    getInitialValueInEffect: false,
+  })
+
+  const toggleSenderCollapsed = () => setSenderCollapsed((current) => !current)
+
+  const senderLegend = (
+    <UnstyledButton
+      onClick={toggleSenderCollapsed}
+      aria-expanded={!senderCollapsed}
+      aria-controls={SENDER_BODY_ID}
+      data-testid="sender-toggle"
+      style={{
+        display: 'inline-flex',
+        alignItems: 'center',
+        gap: 4,
+        font: 'inherit',
+        color: 'inherit',
+      }}
+    >
+      <IconChevronDown
+        size={14}
+        style={{
+          transform: senderCollapsed ? 'rotate(-90deg)' : 'none',
+          transition: 'transform 150ms ease',
+        }}
+      />
+      <span>Absender</span>
+      {senderCollapsed && dirty && (
+        <Tooltip label="Ungespeicherte Änderungen">
+          <span
+            data-testid="sender-dirty-indicator"
+            aria-label="Ungespeicherte Änderungen"
+            style={{
+              display: 'inline-block',
+              width: 8,
+              height: 8,
+              borderRadius: '50%',
+              backgroundColor: 'var(--mantine-color-orange-6)',
+              marginLeft: 4,
+            }}
+          />
+        </Tooltip>
+      )}
+    </UnstyledButton>
+  )
+
   return (
     <Stack
       gap="md"
@@ -90,56 +147,61 @@ export function EditorPanel({
       role="region"
       aria-label="Briefdaten"
     >
-      <Fieldset legend="Absender">
+      <Fieldset legend={senderLegend}>
         <Stack gap="sm">
           <SenderProfileSelector
             profiles={profiles}
             activeId={activeId}
             dirty={dirty}
+            collapsed={senderCollapsed}
             onSelect={onSelectProfile}
             onCreateEmpty={onCreateEmpty}
             onClone={onClone}
             onSave={onSave}
             onDelete={onDelete}
           />
-          <AddressFields value={data.sender} onChange={updateSender} />
-          <SimpleGrid cols={{ base: 1, sm: 2 }} spacing="sm">
-            <TextInput
-              label="Telefon"
-              type="tel"
-              autoComplete="tel"
-              value={data.senderContact.phone}
-              onChange={(e) => setContactField('phone', e.currentTarget.value)}
-            />
-            <TextInput
-              label="Telefax"
-              type="tel"
-              value={data.senderContact.fax}
-              onChange={(e) => setContactField('fax', e.currentTarget.value)}
-            />
-          </SimpleGrid>
-          <TextInput
-            label="E-Mail"
-            type="email"
-            autoComplete="email"
-            value={data.senderContact.email}
-            onChange={(e) => setContactField('email', e.currentTarget.value)}
-          />
-          <TextInput
-            label="Website"
-            type="url"
-            autoComplete="url"
-            value={data.senderContact.website}
-            onChange={(e) => setContactField('website', e.currentTarget.value)}
-          />
-          <TextInput
-            label="Unterschrift (Name)"
-            value={data.signatureName}
-            onChange={(e) =>
-              onChange({ ...data, signatureName: e.currentTarget.value })
-            }
-          />
-          <SignatureField url={signatureUrl} onChange={onChangeSignature} />
+          <Collapse expanded={!senderCollapsed} id={SENDER_BODY_ID}>
+            <Stack gap="sm">
+              <AddressFields value={data.sender} onChange={updateSender} />
+              <SimpleGrid cols={{ base: 1, sm: 2 }} spacing="sm">
+                <TextInput
+                  label="Telefon"
+                  type="tel"
+                  autoComplete="tel"
+                  value={data.senderContact.phone}
+                  onChange={(e) => setContactField('phone', e.currentTarget.value)}
+                />
+                <TextInput
+                  label="Telefax"
+                  type="tel"
+                  value={data.senderContact.fax}
+                  onChange={(e) => setContactField('fax', e.currentTarget.value)}
+                />
+              </SimpleGrid>
+              <TextInput
+                label="E-Mail"
+                type="email"
+                autoComplete="email"
+                value={data.senderContact.email}
+                onChange={(e) => setContactField('email', e.currentTarget.value)}
+              />
+              <TextInput
+                label="Website"
+                type="url"
+                autoComplete="url"
+                value={data.senderContact.website}
+                onChange={(e) => setContactField('website', e.currentTarget.value)}
+              />
+              <TextInput
+                label="Unterschrift (Name)"
+                value={data.signatureName}
+                onChange={(e) =>
+                  onChange({ ...data, signatureName: e.currentTarget.value })
+                }
+              />
+              <SignatureField url={signatureUrl} onChange={onChangeSignature} />
+            </Stack>
+          </Collapse>
         </Stack>
       </Fieldset>
 
