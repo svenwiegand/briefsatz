@@ -1,11 +1,26 @@
 import { useEffect, useRef } from 'react'
-import { useCreateBlockNote } from '@blocknote/react'
+import { useCreateBlockNote, getDefaultReactSlashMenuItems, SuggestionMenuController } from '@blocknote/react'
 import { BlockNoteView } from '@blocknote/mantine'
 import type { PartialBlock } from '@blocknote/core'
+import { filterSuggestionItems } from '@blocknote/core'
 import { de as deDictionary } from '@blocknote/core/locales'
 import '@blocknote/core/fonts/inter.css'
 import '@blocknote/mantine/style.css'
 import type { StoredBlocks } from '../types'
+
+const EXCLUDED_SLASH_MENU_KEYS = new Set([
+  'toggle_list',
+  'image',
+  'video',
+  'audio',
+  'file',
+  'toggle_heading',
+  'toggle_heading_2',
+  'toggle_heading_3',
+  'heading_4',
+  'heading_5',
+  'heading_6',
+])
 
 const DEFAULT_INITIAL_CONTENT: PartialBlock[] = [
   {
@@ -66,7 +81,22 @@ export function BodyEditor({ initialBlocks, onChange }: Props) {
 
   return (
     <div className="body-editor" aria-label="Brieftext-Editor">
-      <BlockNoteView editor={editor} theme="light" />
+      <BlockNoteView editor={editor} theme="light" slashMenu={false}>
+        <SuggestionMenuController
+          triggerCharacter="/"
+          getItems={async (query) =>
+            filterSuggestionItems(
+              getDefaultReactSlashMenuItems(editor).filter(
+                (item) =>
+                  !EXCLUDED_SLASH_MENU_KEYS.has(
+                    (item as unknown as { key: string }).key,
+                  ),
+              ),
+              query,
+            )
+          }
+        />
+      </BlockNoteView>
     </div>
   )
 }
