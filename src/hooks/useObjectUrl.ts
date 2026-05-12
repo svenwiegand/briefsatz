@@ -1,21 +1,20 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo } from 'react'
 
 /**
  * Wrap a `Blob` in an object URL with automatic revocation. The URL
- * is recreated whenever `blob` identity changes and revoked on unmount.
+ * is recreated whenever `blob` identity changes and revoked when the
+ * URL changes or the component unmounts.
  */
 export function useObjectUrl(blob: Blob | null): string | null {
-  const [url, setUrl] = useState<string | null>(null)
+  const url = useMemo(
+    () => (blob ? URL.createObjectURL(blob) : null),
+    [blob],
+  )
 
   useEffect(() => {
-    if (!blob) {
-      setUrl(null)
-      return
-    }
-    const next = URL.createObjectURL(blob)
-    setUrl(next)
-    return () => URL.revokeObjectURL(next)
-  }, [blob])
+    if (!url) return
+    return () => URL.revokeObjectURL(url)
+  }, [url])
 
   return url
 }

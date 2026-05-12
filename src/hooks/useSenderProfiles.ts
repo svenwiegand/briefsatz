@@ -84,7 +84,7 @@ export function useSenderProfiles(): UseSenderProfilesResult {
     getInitialValueInEffect: false,
   })
 
-  const profileList = profiles ?? []
+  const profileList = useMemo(() => profiles ?? [], [profiles])
 
   const activeProfile = useMemo(
     () => profileList.find((p) => p.id === activeId) ?? null,
