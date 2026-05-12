@@ -376,7 +376,7 @@
 
 .letter-page__signature-image {
   max-height: 18mm;
-  max-width: 80mm;
+  max-width: 160mm;
   width: auto;
   height: auto;
   object-fit: contain;
